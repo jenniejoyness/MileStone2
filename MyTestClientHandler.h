@@ -7,9 +7,13 @@
 
 
 #include "ClientHandler.h"
+#include "Solver.h"
+#include "CacheManager.h"
 
 class MyTestClientHandler : public ClientHandler {
-
+private:
+    Solver solver;
+    CacheManager cacheManager;
 };
 
 
