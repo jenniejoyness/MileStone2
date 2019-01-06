@@ -3,3 +3,6 @@
 //
 
 #include "FileCacheManager.h"
+string FileCacheManager::getSolution() {}
+
+bool FileCacheManager::hasSolution() {}

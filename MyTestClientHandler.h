@@ -1,19 +1,18 @@
-//
-// Created by renana on 1/3/19.
-//
 
 #ifndef MILESTONE2_MYTESTCLIENTHANDLER_H
 #define MILESTONE2_MYTESTCLIENTHANDLER_H
 
-
 #include "ClientHandler.h"
 #include "Solver.h"
-#include "CacheManager.h"
+#include "FileCacheManager.h"
 
 class MyTestClientHandler : public ClientHandler {
 private:
     Solver solver;
-    CacheManager cacheManager;
+    FileCacheManager cacheManager;
+public:
+    MyTestClientHandler(Solver solver, FileCacheManager fileCacheManager);
+    void handleClient(int socket);
 };
 
 

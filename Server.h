@@ -5,7 +5,8 @@
 #include "ClientHandler.h"
 
 class Server {
-    //?
+
+protected:
 bool shouldStop = false;
 
 public:

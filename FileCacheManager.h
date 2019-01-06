@@ -6,7 +6,12 @@
 #define MILESTONE2_FILECACHEMANAGER_H
 
 
-class FileCacheManager {
+#include "CacheManager.h"
+
+class FileCacheManager : public CacheManager{
+public:
+    bool hasSolution();
+    string getSolution();
 
 };
 
