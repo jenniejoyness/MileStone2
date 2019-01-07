@@ -1,4 +1,3 @@
-
 #ifndef MILESTONE2_MYSERIALSERVER_H
 #define MILESTONE2_MYSERIALSERVER_H
 
@@ -17,9 +16,9 @@
 
 class MySerialServer : public Server {
 public:
-    void open(int port, ClientHandler c) override;
+    void open(int port, ClientHandler* c) override;
     void stop() override;
-    static void openSocket(int sockfd, int cli_addr, int clilen, ClientHandler c);
+    static void serialService(int sockfd,ClientHandler* c);
 
 };
 

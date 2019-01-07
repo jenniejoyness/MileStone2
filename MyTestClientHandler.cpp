@@ -1,4 +1,3 @@
-
 #include <cstdio>
 #include <cstdlib>
 #include <strings.h>
@@ -40,7 +39,7 @@ void MyTestClientHandler::handleClient(int socketId) {
 
         printf("Here is the message: %s\n", prob);
 
-       //get solution from disk
+        //get solution from disk
         if (this->cacheManager->hasSolution(prob)) {
             solution = this->cacheManager->getSolution(prob);
         } else {
