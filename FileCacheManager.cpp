@@ -57,6 +57,9 @@ void FileCacheManager::updateData(string prob, string solution) {
 void FileCacheManager::writeToFile(string prob, string solution) {
     ofstream file;
     file.open("solutions.txt" , ofstream::out | ostream::app);
+    if(!file){
+        throw "failed opening file";
+    }
     file << prob << "$" << solution << endl;
     file.close();
 }
