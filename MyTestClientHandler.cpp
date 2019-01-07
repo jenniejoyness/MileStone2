@@ -4,45 +4,54 @@
 #include <strings.h>
 #include <unistd.h>
 #include <sstream>
+#include <cstring>
 #include "MyTestClientHandler.h"
 
-MyTestClientHandler::MyTestClientHandler(Solver solver, FileCacheManager fileCacheManager) {
+
+//todo קבל תז
+MyTestClientHandler::MyTestClientHandler(Solver solver, FileCacheManager &fileCacheManager) {
     this->solver = solver;
     this->cacheManager = fileCacheManager;
 }
 
 void MyTestClientHandler::handleClient(int socketId) {
     char buffer[256];
-    int n;
+    ssize_t n;
     char* chr;
     if (socketId < 0) {
         perror("ERROR on accept");
         exit(1);
     }
 
-    /* If connection is established then start communicating */
-    bzero(buffer,256);
-    n = read( socketId,buffer,255 );
+    while (true) {
+        /* If connection is established then start communicating */
+        bzero(buffer, 256);
+        n = read(socketId, buffer, 255);
 
-    if (n < 0) {
-        perror("ERROR reading from socket");
-        exit(1);
-    }
+        if (n < 0) {
+            perror("ERROR reading from socket");
+            exit(1);
+        }
 
-    printf("Here is the message: %s\n",buffer);
+        if (strcmp(buffer, "end") == 0) {
+            return;
+        }
 
-    //get solution from disk
-    if(this->cacheManager.hasSolution()){
-        string s  = this->cacheManager.getSolution();
-        chr = const_cast<char*>(s.c_str());
-    } else {
+        printf("Here is the message: %s\n", buffer);
 
-    }
-    /* Write a response to the client */
-    n = write(socketId,chr,18);
+        //get solution from disk
+        if (this->cacheManager.hasSolution()) {
+            string s = this->cacheManager.getSolution();
+            chr = const_cast<char *>(s.c_str());
+        } else {
 
-    if (n < 0) {
-        perror("ERROR writing to socket");
-        exit(1);
+        }
+        /* Write a response to the client */
+        n = write(socketId, chr, 18);
+
+        if (n < 0) {
+            perror("ERROR writing to socket");
+            exit(1);
+        }
     }
 }

@@ -11,8 +11,8 @@ private:
     Solver solver;
     FileCacheManager cacheManager;
 public:
-    MyTestClientHandler(Solver solver, FileCacheManager fileCacheManager);
-    void handleClient(int socket);
+    MyTestClientHandler(Solver solver, FileCacheManager &fileCacheManager);
+    void handleClient(int socket) override;
 };
 
 

@@ -4,21 +4,22 @@
 
 #include "ClientHandler.h"
 #include "Server.h"
-#include <stdio.h>
-#include <stdlib.h>
+#include <cstdio>
+#include <cstdlib>
 
 #include <netdb.h>
 #include <unistd.h>
 #include <netinet/in.h>
 
-#include <string.h>
+#include <cstring>
 
 #include <sys/socket.h>
 
 class MySerialServer : public Server {
 public:
-    void open(int port, ClientHandler c);
-    void stop();
+    void open(int port, ClientHandler c) override;
+    void stop() override;
+    static void openSocket(int sockfd, int cli_addr, int clilen, ClientHandler c);
 
 };
 
