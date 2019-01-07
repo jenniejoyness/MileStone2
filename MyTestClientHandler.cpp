@@ -5,17 +5,18 @@
 #include <unistd.h>
 #include <sstream>
 #include <cstring>
+#include <iostream>
 #include "MyTestClientHandler.h"
 
 
-//todo קבל תז
-MyTestClientHandler::MyTestClientHandler(Solver solver, FileCacheManager &fileCacheManager) {
+MyTestClientHandler::MyTestClientHandler(Solver<string,string>* solver,FileCacheManager* fileCacheManager) {
     this->solver = solver;
     this->cacheManager = fileCacheManager;
 }
 
 void MyTestClientHandler::handleClient(int socketId) {
-    char buffer[256];
+    char prob[256];
+    string solution;
     ssize_t n;
     char* chr;
     if (socketId < 0) {
@@ -25,29 +26,32 @@ void MyTestClientHandler::handleClient(int socketId) {
 
     while (true) {
         /* If connection is established then start communicating */
-        bzero(buffer, 256);
-        n = read(socketId, buffer, 255);
+        bzero(prob, 256);
+        n = read(socketId, prob, 255);
 
         if (n < 0) {
             perror("ERROR reading from socket");
             exit(1);
         }
 
-        if (strcmp(buffer, "end") == 0) {
+        if (strcmp(prob, "end") == 0) {
             return;
         }
 
-        printf("Here is the message: %s\n", buffer);
+        printf("Here is the message: %s\n", prob);
 
-        //get solution from disk
-        if (this->cacheManager.hasSolution()) {
-            string s = this->cacheManager.getSolution();
-            chr = const_cast<char *>(s.c_str());
+       //get solution from disk
+        if (this->cacheManager->hasSolution(prob)) {
+            solution = this->cacheManager->getSolution(prob);
         } else {
-
+            solution = solver->solve(prob);
+            cacheManager->updateData(prob,solution);
+            cacheManager->writeToFile(prob, solution);
         }
         /* Write a response to the client */
-        n = write(socketId, chr, 18);
+        chr = const_cast<char *>(solution.c_str());
+        n = write(socketId, chr, strlen(chr));
+        cout<<solution<<endl;
 
         if (n < 0) {
             perror("ERROR writing to socket");

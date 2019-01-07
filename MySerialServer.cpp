@@ -1,9 +1,9 @@
 #include <thread>
 #include "MySerialServer.h"
-void MySerialServer::open(int port, ClientHandler c) {
-    int sockfd, portno, clilen;
+void MySerialServer::open(int port, ClientHandler* c) {
+    int sockfd, portno;
 
-    struct sockaddr_in serv_addr, cli_addr;
+    struct sockaddr_in serv_addr;
 
     /* First call to socket() function */
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
@@ -31,19 +31,25 @@ void MySerialServer::open(int port, ClientHandler c) {
        * go in sleep mode and will wait for the incoming connection
     */
 
-    listen(sockfd, 5);
-    clilen = sizeof(cli_addr);
-    thread(openSocket, sockfd, cli_addr, clilen, c);
+    thread t(serialService, sockfd,c);
+    t.detach();
 }
 
-void MySerialServer::openSocket(int sockfd, int cli_addr, int clilen, ClientHandler c) {
-    int newsockfd;
+void MySerialServer::serialService(int sockfd, ClientHandler* c) {
+    int newsockfd, clilen;
+    struct sockaddr_in cli_addr;
 
 //todo timeout
     while (true) {
+        listen(sockfd, 5);
+        clilen = sizeof(cli_addr);
         /* Accept actual connection from the client */
         newsockfd = accept(sockfd, (struct sockaddr *) &cli_addr, (socklen_t *) &clilen);
-        c.handleClient(newsockfd);
+        c->handleClient(newsockfd);
     }
+
+}
+
+void MySerialServer::stop() {
 
 }

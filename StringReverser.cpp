@@ -1,5 +1,8 @@
-//
-// Created by renana on 1/3/19.
-//
 
+#include <algorithm>
 #include "StringReverser.h"
+
+string StringReverser::solve(string problem) {
+    reverse(problem.begin(), problem.end());
+    return problem;
+}

@@ -8,10 +8,10 @@
 
 class MyTestClientHandler : public ClientHandler {
 private:
-    Solver solver;
-    FileCacheManager cacheManager;
+    Solver<string,string>* solver;
+    FileCacheManager* cacheManager;
 public:
-    MyTestClientHandler(Solver solver, FileCacheManager &fileCacheManager);
+    MyTestClientHandler(Solver<string,string>* solver, FileCacheManager* cacheManager);
     void handleClient(int socket) override;
 };
 
