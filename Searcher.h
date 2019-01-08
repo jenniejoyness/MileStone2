@@ -11,6 +11,6 @@ class Searcher {
 private:
 
 public:
-    T search (Searchable<T> searchable);
+    virtual T search (Searchable<T> searchable) = 0;
 };
 #endif //MILESTONE2_SEARCHER_H

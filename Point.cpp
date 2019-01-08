@@ -13,3 +13,7 @@ int Point::getX() const {
 int Point::getY() const {
     return y;
 }
+
+bool Point::operator==(Point other) {
+    return this->x == other.x && this->y == other.y;
+}

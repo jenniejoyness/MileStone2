@@ -5,9 +5,9 @@
 #ifndef MILESTONE2_MATRIX_H
 #define MILESTONE2_MATRIX_H
 
+
 //todo - set structure -gets inout from user
 class Matrix {
-
 };
 
 
