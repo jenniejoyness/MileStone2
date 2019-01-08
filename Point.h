@@ -5,6 +5,8 @@
 #ifndef MILESTONE2_POINT_H
 #define MILESTONE2_POINT_H
 
+#include <iostream>
+using namespace std;
 
 class Point {
 private:
@@ -15,6 +17,7 @@ public:
     int getX() const;
     int getY() const;
     bool operator==(Point other);
+    string to_string();
 };
 
 

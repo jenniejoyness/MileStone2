@@ -17,3 +17,7 @@ int Point::getY() const {
 bool Point::operator==(Point other) {
     return this->x == other.x && this->y == other.y;
 }
+
+string Point::to_string() {
+    return "{" + to_string(x) + "," + to_string(y) + "}";
+}
