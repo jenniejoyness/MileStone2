@@ -21,7 +21,7 @@ class BestFirstSearch : public Searcher<T> {
     };
 
 public:
-    T search(Searchable<T> searchable) {
+    vector<State<T>*> search(Searchable<T> searchable) {
         State<T> *current;
         vector<State<T> *> neighbors;
         priority_queue<State<T>*, vector<State<T>*>, Comp> open;
@@ -34,7 +34,7 @@ public:
             open.pop();
             closed.push_back(current);
             if (current->Equals(searchable.getGoalState())) {
-                // todo  return get path
+                return closed;
             }
             neighbors = searchable.getNeighbors(current);
             for (State<T> *neighbor : neighbors) {
@@ -59,6 +59,8 @@ public:
                 }
             }
         }
+        searchable.getGoalState()->setTrailCost(-1);
+        return closed;
     }
 
     bool inOpen(priority_queue<State<T> *, vector<State<T> *>, Comp> p, State<T> *current) {

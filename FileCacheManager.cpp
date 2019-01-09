@@ -1,5 +1,6 @@
 #include <fstream>
 #include "FileCacheManager.h"
+#include "SplitClass.h"
 
 FileCacheManager::FileCacheManager() {
     loadDataMap();
@@ -27,33 +28,21 @@ void FileCacheManager::loadDataMap() {
         throw "Failed opening file";
     }
     while (getline(file, buffer)) {
-        chunks = split(buffer, "$");
+        chunks = SplitClass::split(buffer, "$");
         data.insert(pair<string, string>(chunks[0], chunks[1]));
     }
     file.close();
 
 }
 
-vector<string> FileCacheManager::split(string line, string delimiter) {
-    vector<string> data;
-    size_t pos = 0;
-    while ((pos = line.find(delimiter)) != string::npos) {
-        if (!line.substr(0, pos).empty()) {
-            data.push_back(line.substr(0, pos));
-        }
-        line.erase(0, pos + delimiter.length());
-    }
-    data.push_back(line.substr(0, pos));
-    return data;
 
-}
 
 void FileCacheManager::updateData(string prob, string solution) {
 
     data.insert(pair<string, string>(prob, solution));
 }
 
-void FileCacheManager::writeToFile(string prob, string solution) {
+void FileCacheManager::saveToDisk(string prob, string solution) {
     ofstream file;
     file.open("solutions.txt" , ofstream::out | ostream::app);
     if(!file){

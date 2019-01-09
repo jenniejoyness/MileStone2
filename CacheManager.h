@@ -15,5 +15,6 @@ public:
     virtual bool hasSolution(string prob) = 0;
     virtual string getSolution(string prob) = 0;
     virtual void updateData(string prob, string solution) = 0;
+    virtual void saveToDisk(string prob, string solution)= 0;
 };
 #endif //MILESTONE2_CACHEMANAGER_H

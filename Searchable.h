@@ -20,7 +20,7 @@ public:
     State<T>* getGoalState() { return goal; }
     std::vector<State<T>*> getAllPossibleStates(State<T>* s) { return structure; }
     //todo
-    vector<State<T>*> getNeighbors(State<T>* s) {};
+    virtual vector<State<T>*> getNeighbors(State<T>* s) = 0;
 
 };
 #endif //MILESTONE2_SEARCHABLE_H

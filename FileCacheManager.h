@@ -11,9 +11,8 @@ public:
     bool hasSolution(string prob);
     string getSolution(string prob);
     void updateData(string prob, string solution) override;
-    void writeToFile(string prob, string solution);
+    void saveToDisk(string prob, string solution) override;
     void loadDataMap();
-    vector<string> split(string line, string delimiter);
 
 };
 

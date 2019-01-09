@@ -18,6 +18,18 @@ bool Point::operator==(Point other) {
     return this->x == other.x && this->y == other.y;
 }
 
-string Point::to_string() {
-    return "{" + to_string(x) + "," + to_string(y) + "}";
+bool Point::isLeftNeighbor(Point other) {
+    return this->x == other.getX() && this->y == (other.getY() -1);
+}
+
+bool Point::isRightNeighbor(Point other) {
+    return this->x == other.getX() && this->y == (other.getY() +1);
+}
+
+bool Point::isUpNeighbor(Point other) {
+    return this->x == (other.getX() - 1) && this->y == other.getY();
+}
+
+bool Point::isDownNeighbor(Point other) {
+    return this->x == (other.getX() + 1) && this->y == other.getY();
 }

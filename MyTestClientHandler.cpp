@@ -45,7 +45,7 @@ void MyTestClientHandler::handleClient(int socketId) {
         } else {
             solution = solver->solve(prob);
             cacheManager->updateData(prob,solution);
-            cacheManager->writeToFile(prob, solution);
+            cacheManager->saveToDisk(prob, solution);
         }
         /* Write a response to the client */
         chr = const_cast<char *>(solution.c_str());

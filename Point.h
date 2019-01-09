@@ -17,7 +17,10 @@ public:
     int getX() const;
     int getY() const;
     bool operator==(Point other);
-    string to_string();
+    bool isLeftNeighbor(Point other);
+    bool isRightNeighbor(Point other);
+    bool isUpNeighbor(Point other);
+    bool isDownNeighbor(Point other);
 };
 
 

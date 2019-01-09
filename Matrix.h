@@ -6,8 +6,15 @@
 #define MILESTONE2_MATRIX_H
 
 
+#include "Searchable.h"
+#include "Point.h"
+
 //todo - set structure -gets inout from user
-class Matrix {
+class Matrix : public Searchable<Point>{
+
+public:
+    Matrix(std::vector<State<Point>*> structure, State<Point>* initialState,State<Point>* goal);
+    vector<State<Point>*> getNeighbors(State<Point>* s) override;
 };
 
 
