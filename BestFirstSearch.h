@@ -44,14 +44,15 @@ public:
                     neighbor->addCost(current->getTrailCost());
                     open.push(neighbor);
                     backup.push_back(neighbor);
-                    //can improve path
+                    //neighbor is either in open or closed and - can improve path
                 } else if (current->getTrailCost() + neighbor->getCost() < neighbor->getTrailCost()) {
                     //todo ??????????????????????
                     //in closed
                     if (!inOpen(neighbor)) {
                         deleteFromClose(closed);
                         open.push(neighbor);
-                    }
+                        backup.push_back(neighbor);
+                    }//else??
                     neighbor->setTrailCost(current->getTrailCost() + neighbor->getCost());
                     neighbor->setComeFrom(current);
                     open = updatePriorityQ(open);
@@ -62,6 +63,7 @@ public:
 
     bool inOpen(priority_queue<State<T> *, vector<State<T> *>, Comp> p, State<T> *current) {
         while (!p.empty()) {
+            //found state in priority/-queue
             if (current->Equals(p.top())) { return true; }
             p.pop();
         }
