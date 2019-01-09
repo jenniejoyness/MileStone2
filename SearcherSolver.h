@@ -11,6 +11,7 @@ class SearcherSolver : public Solver<Searchable<Point>*,string>{
 private:
     Searcher<Point>* searcher;
 public:
+    SearcherSolver(Searcher<Point>* searcher): searcher(searcher) {}
     string solve(Searchable<Point>* p) override;
 };
 

@@ -1,4 +1,5 @@
 #include <fstream>
+#include <cstring>
 #include "FileCacheManager.h"
 #include "SplitClass.h"
 
@@ -21,17 +22,35 @@ bool FileCacheManager::hasSolution(string prob) {
 
 void FileCacheManager::loadDataMap() {
     string buffer;
+    string p;
+    vector<string> solutions;
+    vector<string> problem;
     vector<string> chunks;
-    ifstream file;
-    file.open("solutions.txt", ifstream::in | istream::app);
-    if (!file) {
+    ifstream fileSolutions;
+    ifstream fileProblems;
+    fileSolutions.open("solutions.txt", ifstream::in | istream::app);
+    if (!fileSolutions) {
         throw "Failed opening file";
     }
-    while (getline(file, buffer)) {
-        chunks = SplitClass::split(buffer, "$");
-        data.insert(pair<string, string>(chunks[0], chunks[1]));
+    fileProblems.open("graphs.txt", ifstream::in | istream::app);
+    if (!fileProblems) {
+        throw "Failed opening file";
     }
-    file.close();
+    while (getline(fileSolutions, buffer)) {
+        solutions.push_back(buffer);
+    }
+    while (getline(fileProblems, buffer)) {
+        while(strcmp(buffer.c_str(), "$")  != 0){
+            p += buffer + "\r\n";
+        }
+        problem.push_back(p);
+        p = "";
+    }
+    for (int i = 0; i < solutions.size(); ++i) {
+        data.insert(pair<string, string>(problem[i], solutions[i]));
+    }
+    fileProblems.close();
+    fileSolutions.close();
 
 }
 
@@ -43,11 +62,23 @@ void FileCacheManager::updateData(string prob, string solution) {
 }
 
 void FileCacheManager::saveToDisk(string prob, string solution) {
-    ofstream file;
-    file.open("solutions.txt" , ofstream::out | ostream::app);
-    if(!file){
+    ofstream fileSolution;
+    ofstream fileProblem;
+
+    fileSolution.open("solutions.txt" , ofstream::out | ostream::app);
+    if(!fileSolution){
         throw "failed opening file";
     }
-    file << prob << "$" << solution << endl;
-    file.close();
+    fileProblem.open("graphs.txt" , ofstream::out | ostream::app);
+    if(!fileProblem){
+        throw "failed opening file";
+    }
+
+    fileProblem<<prob;
+    fileProblem<<"$"<<endl;
+
+    fileSolution << solution << endl;
+
+    fileSolution.close();
+    fileProblem.close();
 }

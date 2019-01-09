@@ -33,3 +33,18 @@ bool Point::isUpNeighbor(Point other) {
 bool Point::isDownNeighbor(Point other) {
     return this->x == (other.getX() + 1) && this->y == other.getY();
 }
+
+string Point::move(Point other) {
+    if (this->x == other.getX() && this->y > other.getY()) {
+        return "R";
+    }
+    if (this->x == other.getX() && this->y < other.getY()) {
+        return "L";
+    }
+    if (this->x > other.getX() && this->y == other.getY()) {
+        return "D";
+    }
+    if (this->x < other.getX() && this->y == other.getY()) {
+        return "U";
+    }
+}

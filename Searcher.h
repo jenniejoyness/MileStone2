@@ -9,9 +9,14 @@
 #include "Searchable.h"
 template <class T>
 class Searcher {
-private:
+protected:
+    Searchable<T>* searchable;
 
 public:
-    virtual vector<State<T>*> search (Searchable<T>* searchable) = 0;
+    virtual string search (Searchable<T>* searchable) = 0;
+    double getTrailCost() {
+        return searchable->getGoalState()->getTrailCost();
+    }
+    //virtual int getNumOfNodesEvaluated() = 0;
 };
 #endif //MILESTONE2_SEARCHER_H

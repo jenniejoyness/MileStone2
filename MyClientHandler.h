@@ -10,10 +10,10 @@
 
 class MyClientHandler : public ClientHandler{
 private:
-    Solver<Searchable<Point>*,vector<State<Point>*>>* solver;
+    Solver<Searchable<Point>*,string>* solver;
     CacheManager* cacheManager;
 public:
-    MyClientHandler(Solver<Searchable<Point>*,vector<State<Point>*>>* solver,CacheManager* cacheManager);
+    MyClientHandler(Solver<Searchable<Point>*,string>* solver,CacheManager* cacheManager);
     void handleClient(int socketId);
 };
 

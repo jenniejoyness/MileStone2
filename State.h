@@ -35,6 +35,13 @@ public:
     void setTrailCost(double cost) { this->trailCost = cost; }
 
     T getState() { return state; }
+
+    void setCost(double cost) {
+        this->cost = cost;
+        this->trailCost = cost;
+    }
+
+    State<T>* getComaFrom() { return comeFrom; }
     //void setComeFrom(const State<T> &comeFrom);
 };
 

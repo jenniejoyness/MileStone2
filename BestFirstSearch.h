@@ -10,6 +10,7 @@
 #include "Point.h"
 #include <iostream>
 #include <queue>
+#include <algorithm>
 
 template<class T>
 class BestFirstSearch : public Searcher<T> {
@@ -21,22 +22,24 @@ class BestFirstSearch : public Searcher<T> {
     };
 
 public:
-    vector<State<T>*> search(Searchable<T> searchable) {
+    string search(Searchable<T>* searchable) override {
+        this->searchable = searchable;
         State<T> *current;
         vector<State<T> *> neighbors;
         priority_queue<State<T>*, vector<State<T>*>, Comp> open;
-        open.push(searchable.getInitialState());
-        vector<State<T> *> backup = {searchable.getInitialState()};
+        open.push(searchable->getInitialState());
+        vector<State<T> *> backup = {searchable->getInitialState()};
         vector<State<T> *> closed;
 
         while (!open.empty()) {
             current = open.top();
             open.pop();
             closed.push_back(current);
-            if (current->Equals(searchable.getGoalState())) {
-                return closed;
+            if (current->Equals(searchable->getGoalState())) {
+                //return to_string(searchable->getGoalState()->getTrailCost());
+                return getPath(closed, searchable->getGoalState());
             }
-            neighbors = searchable.getNeighbors(current);
+            neighbors = searchable->getNeighbors(current);
             for (State<T> *neighbor : neighbors) {
                 //first time encountering state
                 if (!inOpen(open, neighbor) && !inClosed(closed, neighbor)) {
@@ -48,19 +51,19 @@ public:
                 } else if (current->getTrailCost() + neighbor->getCost() < neighbor->getTrailCost()) {
                     //todo ??????????????????????
                     //in closed
-                    if (!inOpen(neighbor)) {
-                        deleteFromClose(closed);
+                  /*  if (!inOpen(open,neighbor)) {
+                        deleteFromClose(closed,neighbor);
                         open.push(neighbor);
                         backup.push_back(neighbor);
-                    }//else??
+                    }*///else??
                     neighbor->setTrailCost(current->getTrailCost() + neighbor->getCost());
                     neighbor->setComeFrom(current);
                     open = updatePriorityQ(open);
                 }
             }
         }
-        searchable.getGoalState()->setTrailCost(-1);
-        return closed;
+        searchable->getGoalState()->setTrailCost(-1);
+        return to_string(-1);
     }
 
     bool inOpen(priority_queue<State<T> *, vector<State<T> *>, Comp> p, State<T> *current) {
@@ -72,41 +75,48 @@ public:
         return false;
     }
 
-    bool inClosed(vector<State<T>> closed, State<T> current) {
+    bool inClosed(vector<State<T>*> closed, State<T>* current) {
         for (auto state:closed) {
-            if (current.Equals(state)) {
+            if (current->Equals(state)) {
                 return true;
             }
         }
         return false;
     }
 
-    priority_queue<State<T> *, vector<State<T> *>, Comp> updatePriorityQ(priority_queue<State<T> *,
+    priority_queue<State<T>*, vector<State<T> *>, Comp> updatePriorityQ(priority_queue<State<T> *,
             vector<State<T> *>, Comp> p ){
         priority_queue<State<T> *, vector<State<T> *>, Comp> newQ;
-        for (State<T> *neighbor : p) {
-            newQ.push(p);
+        while (!p.empty()) {
+            newQ.push(p.top());
+            p.pop();
         }
         return newQ;
     }
 
-    string getPath(vector<State<T> *> closed, State<T>* goal) {
-        State<T>* current = goal;
-        string path;
-        while(current->getComeFrom() != nullptr) {
-            path +=
-        }
-
-    }
-
-    void deleteFromClose(vector<State<T> *> &closed, State<T>* del) {
-        for (State<T>* state : closed) {
+  /*  void deleteFromClose(vector<State<T>*> &closed, State<T>* del) {
+       for (State<T>* state=closed.begin(); state != closed.end(); state++) {
             if (state->Equals(del)) {
                 closed.erase(state);
             }
         }
+    }*/
+    string getPath(vector<State<T> *> closed, State<T> * goal){
+        State<T> * current = goal;
+        string path;
+        while (current->getComaFrom() != nullptr) {
+            for (State<T> *state:closed) {
+                if (current->getComaFrom() != nullptr) {
+                    if (current->getComaFrom()->Equals(state)) {
+                        path += current->getState().move(state->getState());
+                        current = current->getComaFrom();
+                    }
+                }
+            }
+        }
+        reverse(path.begin(), path.end());
+        return path;
     }
-
 
 
 
