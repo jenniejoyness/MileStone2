@@ -11,12 +11,13 @@ template <class T>
 class Searcher {
 protected:
     Searchable<T>* searchable;
+    int numOfNodesEvaluated = 0;
 
 public:
     virtual string search (Searchable<T>* searchable) = 0;
     double getTrailCost() {
         return searchable->getGoalState()->getTrailCost();
     }
-    //virtual int getNumOfNodesEvaluated() = 0;
+    virtual int getNumOfNodesEvaluated() { return numOfNodesEvaluated;}
 };
 #endif //MILESTONE2_SEARCHER_H

@@ -28,6 +28,7 @@ public:
         vector<State<T> *> neighbors;
         priority_queue<State<T>*, vector<State<T>*>, Comp> open;
         open.push(searchable->getInitialState());
+        this->numOfNodesEvaluated++;
         vector<State<T> *> backup = {searchable->getInitialState()};
         vector<State<T> *> closed;
 
@@ -46,6 +47,7 @@ public:
                     neighbor->setComeFrom(current);
                     neighbor->addCost(current->getTrailCost());
                     open.push(neighbor);
+                    this->numOfNodesEvaluated++;
                     backup.push_back(neighbor);
                     //neighbor is either in open or closed and - can improve path
                 } else if (current->getTrailCost() + neighbor->getCost() < neighbor->getTrailCost()) {
