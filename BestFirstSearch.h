@@ -10,6 +10,7 @@
 #include "Point.h"
 #include <iostream>
 #include <queue>
+#include <stack>
 #include <algorithm>
 
 template<class T>
@@ -28,6 +29,7 @@ public:
         vector<State<T> *> neighbors;
         priority_queue<State<T>*, vector<State<T>*>, Comp> open;
         open.push(searchable->getInitialState());
+        this->numOfNodesEvaluated++;
         vector<State<T> *> backup = {searchable->getInitialState()};
         vector<State<T> *> closed;
 
@@ -37,7 +39,7 @@ public:
             closed.push_back(current);
             if (current->Equals(searchable->getGoalState())) {
                 //return to_string(searchable->getGoalState()->getTrailCost());
-                return getPath(closed, searchable->getGoalState());
+                return searchable->getPath();
             }
             neighbors = searchable->getNeighbors(current);
             for (State<T> *neighbor : neighbors) {
@@ -46,16 +48,17 @@ public:
                     neighbor->setComeFrom(current);
                     neighbor->addCost(current->getTrailCost());
                     open.push(neighbor);
+                    this->numOfNodesEvaluated++;
                     backup.push_back(neighbor);
                     //neighbor is either in open or closed and - can improve path
                 } else if (current->getTrailCost() + neighbor->getCost() < neighbor->getTrailCost()) {
-                    //todo ??????????????????????
+                    //todo - need to add this case?
                     //in closed
-                  /*  if (!inOpen(open,neighbor)) {
-                        deleteFromClose(closed,neighbor);
-                        open.push(neighbor);
-                        backup.push_back(neighbor);
-                    }*///else??
+                    /*  if (!inOpen(open,neighbor)) {
+                          deleteFromClose(closed,neighbor);
+                          open.push(neighbor);
+                          backup.push_back(neighbor);
+                      }*///else??
                     neighbor->setTrailCost(current->getTrailCost() + neighbor->getCost());
                     neighbor->setComeFrom(current);
                     open = updatePriorityQ(open);
@@ -94,32 +97,45 @@ public:
         return newQ;
     }
 
-  /*  void deleteFromClose(vector<State<T>*> &closed, State<T>* del) {
-       for (State<T>* state=closed.begin(); state != closed.end(); state++) {
-            if (state->Equals(del)) {
-                closed.erase(state);
-            }
-        }
-    }*/
-    string getPath(vector<State<T> *> closed, State<T> * goal){
+    /*  void deleteFromClose(vector<State<T>*> &closed, State<T>* del) {
+         for (State<T>* state=closed.begin(); state != closed.end(); state++) {
+              if (state->Equals(del)) {
+                  closed.erase(state);
+              }
+          }
+      }*/
+/*    string getPath(vector<State<T> *> closed, State<T> * goal, State<T> * initial){
         State<T> * current = goal;
         string path;
+        //end when at the father
         while (current->getComaFrom() != nullptr) {
             for (State<T> *state:closed) {
-                if (current->getComaFrom() != nullptr) {
+                if (state->getComaFrom() != nullptr) {
+                    //find father node of current
                     if (current->getComaFrom()->Equals(state)) {
                         path += current->getState().move(state->getState());
-                        current = current->getComaFrom();
+                        break;
                     }
                 }
             }
+            current = current->getComaFrom();
+            //when the current is the initial state
+            if (current->getComaFrom()->Equals(initial) ){
+                break;
+            }
         }
+        //find the last move to the initial state
+        path += current->getState().move(initial->getState());
         reverse(path.begin(), path.end());
         return path;
-    }
+    }*/
 
 
 
 };
 
 #endif //MILESTONE2_BESTFIRSTSEARCH_H
+
+
+
+
