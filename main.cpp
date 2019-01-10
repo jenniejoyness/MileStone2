@@ -8,17 +8,18 @@
 #include "SearcherSolver.h"
 #include "MyClientHandler.h"
 #include "Matrix.h"
+#include "BFS.h"
 
 using namespace std;
 
 #include <queue>
 int main() {
    std::cout << "Hello, World!" << std::endl;
-    MySerialServer* d = new MySerialServer();
+ /*   MySerialServer* d = new MySerialServer();
     Solver<Searchable<Point>*,string>* solver = new SearcherSolver(new BestFirstSearch<Point>());
     CacheManager* cacheManager = new FileCacheManager();
     ClientHandler* ds = new MyClientHandler(solver, cacheManager);
-    d->open(5400,ds);
+    d->open(5400,ds);*/
 
 /*
     State<Point>* initial = new State<Point>(Point(0, 0), 1);
@@ -58,6 +59,27 @@ int main() {
     //BestFirstSearch<Point> * b = new BestFirstSearch<Point>;
     //string x = b->search(m);
     //cout << x << endl;
+
+ State<Point>* initial = new State<Point>(Point(0, 0), 100);
+ State<Point>* goal = new State<Point>(Point(2, 2), 100);
+
+ vector<State<Point> *> searchable;
+ searchable.push_back(initial);
+ searchable.push_back(new State<Point>(Point(0, 1), 100));
+ searchable.push_back(new State<Point>(Point(0, 2), 100));
+ searchable.push_back(new State<Point>(Point(1, 0), 1));
+ searchable.push_back(new State<Point>(Point(1, 1), 5));
+ searchable.push_back(new State<Point>(Point(1, 2), 100));
+ searchable.push_back(new State<Point>(Point(2, 0), 2));
+ searchable.push_back(new State<Point>(Point(2, 1), 3));
+ searchable.push_back(goal);
+
+
+
+ Searchable<Point>* m = new Matrix(searchable, initial, goal);
+ BFS<Point> * b = new BFS<Point>;
+ string x = b->search(m);
+ cout << x << endl;
 
     while(true){}
     return 0;

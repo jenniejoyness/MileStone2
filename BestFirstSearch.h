@@ -38,7 +38,7 @@ public:
             closed.push_back(current);
             if (current->Equals(searchable->getGoalState())) {
                 //return to_string(searchable->getGoalState()->getTrailCost());
-                return getPath(closed, searchable->getGoalState(), searchable->getInitialState());
+                return searchable->getPath();
             }
             neighbors = searchable->getNeighbors(current);
             for (State<T> *neighbor : neighbors) {
@@ -51,7 +51,7 @@ public:
                     backup.push_back(neighbor);
                     //neighbor is either in open or closed and - can improve path
                 } else if (current->getTrailCost() + neighbor->getCost() < neighbor->getTrailCost()) {
-                    //todo ??????????????????????
+                    //todo - need to add this case?
                     //in closed
                   /*  if (!inOpen(open,neighbor)) {
                         deleteFromClose(closed,neighbor);
@@ -103,7 +103,7 @@ public:
             }
         }
     }*/
-    string getPath(vector<State<T> *> closed, State<T> * goal, State<T> * initial){
+/*    string getPath(vector<State<T> *> closed, State<T> * goal, State<T> * initial){
         State<T> * current = goal;
         string path;
         //end when at the father
@@ -127,7 +127,7 @@ public:
         path += current->getState().move(initial->getState());
         reverse(path.begin(), path.end());
         return path;
-    }
+    }*/
 
 
 
