@@ -37,7 +37,7 @@ public:
             closed.push_back(current);
             if (current->Equals(searchable->getGoalState())) {
                 //return to_string(searchable->getGoalState()->getTrailCost());
-                return getPath(closed, searchable->getGoalState());
+                return getPath(closed, searchable->getGoalState(), searchable->getInitialState());
             }
             neighbors = searchable->getNeighbors(current);
             for (State<T> *neighbor : neighbors) {
@@ -101,19 +101,28 @@ public:
             }
         }
     }*/
-    string getPath(vector<State<T> *> closed, State<T> * goal){
+    string getPath(vector<State<T> *> closed, State<T> * goal, State<T> * initial){
         State<T> * current = goal;
         string path;
+        //end when at the father
         while (current->getComaFrom() != nullptr) {
             for (State<T> *state:closed) {
-                if (current->getComaFrom() != nullptr) {
+                if (state->getComaFrom() != nullptr) {
+                    //find father node of current
                     if (current->getComaFrom()->Equals(state)) {
                         path += current->getState().move(state->getState());
-                        current = current->getComaFrom();
+                        break;
                     }
                 }
             }
+            current = current->getComaFrom();
+            //when the current is the initial state
+            if (current->getComaFrom()->Equals(initial) ){
+                break;
+            }
         }
+        //find the last move to the initial state
+        path += current->getState().move(initial->getState());
         reverse(path.begin(), path.end());
         return path;
     }
