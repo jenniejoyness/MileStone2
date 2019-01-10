@@ -23,33 +23,32 @@ bool FileCacheManager::hasSolution(string prob) {
 void FileCacheManager::loadDataMap() {
     string buffer;
     string p;
-    vector<string> solutions;
-    vector<string> problem;
-    vector<string> chunks;
+    string s;
+    bool inSol = false;
     ifstream fileSolutions;
-    ifstream fileProblems;
+
     fileSolutions.open("solutions.txt", ifstream::in | istream::app);
     if (!fileSolutions) {
         throw "Failed opening file";
     }
-    fileProblems.open("graphs.txt", ifstream::in | istream::app);
-    if (!fileProblems) {
-        throw "Failed opening file";
-    }
     while (getline(fileSolutions, buffer)) {
-        solutions.push_back(buffer);
-    }
-    while (getline(fileProblems, buffer)) {
-        while(strcmp(buffer.c_str(), "$")  != 0){
-            p += buffer + "\r\n";
+        while (strcmp(buffer.c_str(), "$$")  != 0){
+            if (strcmp(buffer.c_str(), "$")  == 0) {
+                inSol = true;
+            }
+            else if (!inSol) {
+                p += buffer;
+            }
+            else {
+                s += buffer;
+            }
+            getline(fileSolutions, buffer);
         }
-        problem.push_back(p);
+        data.insert(pair<string, string>(p, s));
+        inSol = false;
         p = "";
+        s = "";
     }
-    for (int i = 0; i < solutions.size(); ++i) {
-        data.insert(pair<string, string>(problem[i], solutions[i]));
-    }
-    fileProblems.close();
     fileSolutions.close();
 
 }
@@ -63,22 +62,16 @@ void FileCacheManager::updateData(string prob, string solution) {
 
 void FileCacheManager::saveToDisk(string prob, string solution) {
     ofstream fileSolution;
-    ofstream fileProblem;
+
 
     fileSolution.open("solutions.txt" , ofstream::out | ostream::app);
     if(!fileSolution){
         throw "failed opening file";
     }
-    fileProblem.open("graphs.txt" , ofstream::out | ostream::app);
-    if(!fileProblem){
-        throw "failed opening file";
-    }
-
-    fileProblem<<prob;
-    fileProblem<<"$"<<endl;
-
+    fileSolution<<prob << endl;
+    fileSolution<<"$"<<endl;
     fileSolution << solution << endl;
+    fileSolution << "$$" << endl;
 
     fileSolution.close();
-    fileProblem.close();
 }

@@ -44,9 +44,10 @@ void MyClientHandler::handleClient(int socketId) {
             break;
         }
         switch (flag) {
+            //size of matrix
+            //????todo - will he give size
             case 0:
                 prob += buffer;
-                prob += "\r\n";
                 temp = SplitClass::split(buffer, ",");
                 //set matrix size
                 if (temp.size() == 1) {
@@ -57,22 +58,23 @@ void MyClientHandler::handleClient(int socketId) {
                 temp.clear();
                 flag++;
                 break;
+                //initial state
             case 1:
                 prob += buffer;
-                prob += "\r\n";
                 temp = SplitClass::split(buffer, ",");
                 initialState = new State<Point>(Point(stoi(temp[0]), stoi(temp[1])), 0);
                 temp.clear();
                 flag++;
                 break;
+                //goal state
             case 2:
                 prob += buffer;
-                prob += "\r\n";
                 temp = SplitClass::split(buffer, ",");
                 goalState = new State<Point>(Point(stoi(temp[0]), stoi(temp[1])), 0);
                 temp.clear();
                 flag++;
                 break;
+                //matrix
             case 3:
                 temp = SplitClass::split(buffer, ",");
                 for (int j = 0; j < col; ++j) {
@@ -88,21 +90,21 @@ void MyClientHandler::handleClient(int socketId) {
 
                 }
                 prob += buffer;
-                prob += "\r\n";
                 i++;
                 if (i == row) {
                     matrixEnd = true;
                 }
                 break;
         }
-
+        //solve matrix
         if (matrixEnd) {
-            cout << "1"<<endl;
             Searchable<Point> *matrix = new Matrix(searchable, initialState, goalState);
             //get solution from disk
             if (this->cacheManager->hasSolution(prob)) {
                 solution = this->cacheManager->getSolution(prob);
+                cout<<"found in file"<<endl;
             } else {
+                cout<<"solved"<<endl;
                 solution = solver->solve(matrix);
                 //solution = to_string(matrix->getGoalState()->getTrailCost());
                 cacheManager->updateData(prob, solution);
@@ -111,7 +113,7 @@ void MyClientHandler::handleClient(int socketId) {
             /* Write a response to the client */
             chr = const_cast<char *>(solution.c_str());
             n = write(socketId, chr, strlen(chr));
-            cout << solution << endl;
+            cout << "in myclienthandler:" + solution << endl;
 
             if (n < 0) {
                 perror("ERROR writing to socket");
@@ -120,7 +122,6 @@ void MyClientHandler::handleClient(int socketId) {
             flag = 0;
             prob = "";
         }
-        //printf("Here is the message: %s\n", prob);
     }
 
 }

@@ -8,37 +8,78 @@
 #include "SearcherSolver.h"
 #include "MyClientHandler.h"
 #include "Matrix.h"
+#include "BFS.h"
 
 using namespace std;
 
 #include <queue>
 int main() {
-    std::cout << "Hello, World!" << std::endl;
-   /* MySerialServer* d = new MySerialServer;
+   std::cout << "Hello, World!" << std::endl;
+ /*   MySerialServer* d = new MySerialServer();
     Solver<Searchable<Point>*,string>* solver = new SearcherSolver(new BestFirstSearch<Point>());
-    CacheManager* fileCacheManager = new FileCacheManager();
-    ClientHandler* ds = new MyClientHandler(solver, fileCacheManager);
+    CacheManager* cacheManager = new FileCacheManager();
+    ClientHandler* ds = new MyClientHandler(solver, cacheManager);
     d->open(5400,ds);*/
 
-    State<Point>* initial = new State<Point>(Point(0, 0), 3);
-    State<Point>* goal = new State<Point>(Point(2, 2), 6);
+/*
+    State<Point>* initial = new State<Point>(Point(0, 0), 1);
+    State<Point>* goal = new State<Point>(Point(1, 1), 1);
 
     vector<State<Point> *> searchable;
     searchable.push_back(initial);
-    searchable.push_back(new State<Point>(Point(0, 1), 2));
-    searchable.push_back(new State<Point>(Point(0, 2), 2));
+    searchable.push_back(new State<Point>(Point(0, 1), 1));
     searchable.push_back(new State<Point>(Point(1, 0), 1));
-    searchable.push_back(new State<Point>(Point(1, 1), 7));
-    searchable.push_back(new State<Point>(Point(1, 2), 5));
-    searchable.push_back(new State<Point>(Point(2, 0), 100));
-    searchable.push_back(new State<Point>(Point(2, 1), 4));
     searchable.push_back(goal);
 
 
+    string prob;
+    prob += "2";
+
+    prob += "0,0";
+
+    prob += "1,1";
+
+    prob += "1,1";
+
+    prob += "1,1";
+
+
     Searchable<Point>* m = new Matrix(searchable, initial, goal);
-    BestFirstSearch<Point> * b = new BestFirstSearch<Point>;
-    string x = b->search(m);
-    cout << x << endl;
+    string s;
+    if (cacheManager->hasSolution(prob)) {
+        s = cacheManager->getSolution(prob);
+        cout<<"found in file"<<endl;
+    } else {
+        cout<<"solved"<<endl;
+        s = solver->solve(m);
+        //solution = to_string(matrix->getGoalState()->getTrailCost());
+        cacheManager->updateData(prob, s);
+        cacheManager->saveToDisk(prob, s);
+    }*/
+    //BestFirstSearch<Point> * b = new BestFirstSearch<Point>;
+    //string x = b->search(m);
+    //cout << x << endl;
+
+ State<Point>* initial = new State<Point>(Point(0, 0), 100);
+ State<Point>* goal = new State<Point>(Point(2, 2), 100);
+
+ vector<State<Point> *> searchable;
+ searchable.push_back(initial);
+ searchable.push_back(new State<Point>(Point(0, 1), 100));
+ searchable.push_back(new State<Point>(Point(0, 2), 100));
+ searchable.push_back(new State<Point>(Point(1, 0), 1));
+ searchable.push_back(new State<Point>(Point(1, 1), 5));
+ searchable.push_back(new State<Point>(Point(1, 2), 100));
+ searchable.push_back(new State<Point>(Point(2, 0), 2));
+ searchable.push_back(new State<Point>(Point(2, 1), 3));
+ searchable.push_back(goal);
+
+
+
+ Searchable<Point>* m = new Matrix(searchable, initial, goal);
+ BFS<Point> * b = new BFS<Point>;
+ string x = b->search(m);
+ cout << x << endl;
 
     while(true){}
     return 0;
