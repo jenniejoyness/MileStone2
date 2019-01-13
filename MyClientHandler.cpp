@@ -5,6 +5,7 @@
 #include "MyClientHandler.h"
 #include "SplitClass.h"
 #include "Matrix.h"
+#pragma once
 
 MyClientHandler::MyClientHandler(Solver<Searchable<Point>*,string>* solver,CacheManager* cacheManager) {
     this->solver = solver;
@@ -12,20 +13,13 @@ MyClientHandler::MyClientHandler(Solver<Searchable<Point>*,string>* solver,Cache
 }
 
 void MyClientHandler::handleClient(int socketId) {
-    int flag = 0;
-    int col;
-    int row;
-    int i = 0;
-    bool matrixEnd = false;
     string prob;
-    State<Point> *initialState;
-    State<Point> *goalState;
-    vector<string> temp;
-    vector<State<Point> *> searchable;
+    vector<string> tempProb;
     char buffer[256];
     string solution;
     ssize_t n;
     char *chr;
+
     if (socketId < 0) {
         perror("ERROR on accept");
         exit(1);
@@ -40,65 +34,9 @@ void MyClientHandler::handleClient(int socketId) {
             perror("ERROR reading from socket");
             exit(1);
         }
-        if (strcmp(buffer, "end") == 0) {
-            break;
-        }
-        switch (flag) {
-            //size of matrix
-            //????todo - will he give size
-            case 0:
-                prob += buffer;
-                temp = SplitClass::split(buffer, ",");
-                //set matrix size
-                if (temp.size() == 1) {
-                    row = col = stoi(temp[0]);
-                } else {
-                    row = stoi(temp[0]), col = stoi(temp[1]);
-                }
-                temp.clear();
-                flag++;
-                break;
-                //initial state
-            case 1:
-                prob += buffer;
-                temp = SplitClass::split(buffer, ",");
-                initialState = new State<Point>(Point(stoi(temp[0]), stoi(temp[1])), 0);
-                temp.clear();
-                flag++;
-                break;
-                //goal state
-            case 2:
-                prob += buffer;
-                temp = SplitClass::split(buffer, ",");
-                goalState = new State<Point>(Point(stoi(temp[0]), stoi(temp[1])), 0);
-                temp.clear();
-                flag++;
-                break;
-                //matrix
-            case 3:
-                temp = SplitClass::split(buffer, ",");
-                for (int j = 0; j < col; ++j) {
-                    if (i == initialState->getState().getX() && j == initialState->getState().getY()) {
-                        initialState->setCost(stod(temp[j]));
-                        searchable.push_back(initialState);
-                    } else if (i == goalState->getState().getX() && j == goalState->getState().getY()) {
-                        goalState->setCost(stod(temp[j]));
-                        searchable.push_back(goalState);
-                    } else {
-                        searchable.push_back(new State<Point>(Point(i, j), stod(temp[j])));
-                    }
-
-                }
-                prob += buffer;
-                i++;
-                if (i == row) {
-                    matrixEnd = true;
-                }
-                break;
-        }
         //solve matrix
-        if (matrixEnd) {
-            Searchable<Point> *matrix = new Matrix(searchable, initialState, goalState);
+        if (strcmp(buffer, "end") == 0) {
+            Searchable<Point> *matrix = makeMatrix(tempProb);
             //get solution from disk
             if (this->cacheManager->hasSolution(prob)) {
                 solution = this->cacheManager->getSolution(prob);
@@ -119,10 +57,56 @@ void MyClientHandler::handleClient(int socketId) {
                 perror("ERROR writing to socket");
                 exit(1);
             }
-            flag = 0;
-            prob = "";
+            break;
         }
+        tempProb.emplace_back(buffer);
+        prob += buffer;
+
     }
 
+}
+
+Searchable<Point>* MyClientHandler::makeMatrix(vector<string> tempProb) {
+    typedef pair<int, int> Pair;
+    typedef pair<double, Pair> pPair;
+
+    vector<pPair> pairs;
+    vector<State<Point>*> searchable;
+    vector<string> chopped;
+
+
+    chopped = SplitClass::split(tempProb[tempProb.size() - 2], ",");
+    State<Point> *initialState = new State<Point>(Point(stoi(chopped[0]), stoi(chopped[1])),0);
+    chopped = SplitClass::split(tempProb[tempProb.size() - 1], ",");
+    State<Point> *goalState = new State<Point>(Point(stoi(chopped[0]), stoi(chopped[1])),0);
+
+    long row = tempProb.size() - 2;
+    long col = SplitClass::split(tempProb[0],",").size();
+
+    for (int i = 0; i < row ;++i) {
+        chopped = SplitClass::split(tempProb[i],",");
+        for (int j = 0; j < col; ++j) {
+            //set initial state cost
+            if (i == initialState->getState().getX() && j == initialState->getState().getY()) {
+                initialState->setCost(stod(chopped[j]));
+                searchable.push_back(initialState);
+                //set goal state cost
+            } else if (i == goalState->getState().getX() && j == goalState->getState().getY()) {
+                goalState->setCost(stod(chopped[j]));
+                searchable.push_back(goalState);
+                //make states
+            }else{
+                searchable.push_back(new State<Point>(Point(i,j),stoi(chopped[j])));
+            }
+            pairs.emplace_back(pPair(stod(chopped[j]),Pair(i,j)));
+        }
+
+    }
+    Searchable<Point>* matrix = new Matrix(searchable,initialState,goalState);
+    matrix->setStateLocations(pairs);
+    matrix->setRowAndCol(row,col);
+    matrix->setSrcsAndDest(Pair(matrix->getInitialState()->getState().getX(),matrix->getInitialState()->getState().getY()),
+                           Pair(matrix->getGoalState()->getState().getX(), matrix->getGoalState()->getState().getY()));
+    return matrix;
 }
 

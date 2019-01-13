@@ -8,6 +8,7 @@
 
 #include "Searchable.h"
 #include "Point.h"
+#pragma once
 
 //todo - set structure -gets inout from user
 class Matrix : public Searchable<Point>{

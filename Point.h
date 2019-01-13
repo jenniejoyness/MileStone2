@@ -10,6 +10,7 @@ using namespace std;
 
 class Point {
 private:
+    //x = row, y = col
     int x;
     int y;
 public:
@@ -21,9 +22,6 @@ public:
     bool isRightNeighbor(Point other);
     bool isUpNeighbor(Point other);
     bool isDownNeighbor(Point other);
-    operator std::string() const {
-        return to_string(x) + "," + to_string(y);
-    }
     string move(Point other);
 };
 

@@ -7,6 +7,7 @@
 #include "CacheManager.h"
 #include "Searchable.h"
 #include "Point.h"
+#pragma once
 
 class MyClientHandler : public ClientHandler{
 private:
@@ -15,6 +16,7 @@ private:
 public:
     MyClientHandler(Solver<Searchable<Point>*,string>* solver,CacheManager* cacheManager);
     void handleClient(int socketId);
+    Searchable<Point>* makeMatrix(vector<string> tempProb);
 };
 
 
