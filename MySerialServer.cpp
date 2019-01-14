@@ -39,15 +39,13 @@ void MySerialServer::serialService(int sockfd, ClientHandler* c) {
     int newsockfd, clilen;
     struct sockaddr_in cli_addr;
 
-//todo timeout
     while (true) {
-        listen(sockfd, 5);
+        listen(sockfd, SOMAXCONN);
         clilen = sizeof(cli_addr);
         /* Accept actual connection from the client */
         newsockfd = accept(sockfd, (struct sockaddr *) &cli_addr, (socklen_t *) &clilen);
         c->handleClient(newsockfd);
     }
-
 }
 
 void MySerialServer::stop() {

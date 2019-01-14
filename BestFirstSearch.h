@@ -29,7 +29,6 @@ public:
         vector<State<T> *> neighbors;
         priority_queue<State<T>*, vector<State<T>*>, Comp> open;
         open.push(searchable->getInitialState());
-        this->numOfNodesEvaluated++;
         vector<State<T> *> backup = {searchable->getInitialState()};
         vector<State<T> *> closed;
 
@@ -37,8 +36,9 @@ public:
             current = open.top();
             open.pop();
             closed.push_back(current);
+            this->numOfNodesEvaluated++;
             if (current->Equals(searchable->getGoalState())) {
-                //return to_string(searchable->getGoalState()->getTrailCost());
+                cout<<"num of nodes: " << this->numOfNodesEvaluated<<endl;
                 return searchable->getPath();
             }
             neighbors = searchable->getNeighbors(current);
@@ -48,17 +48,9 @@ public:
                     neighbor->setComeFrom(current);
                     neighbor->addCost(current->getTrailCost());
                     open.push(neighbor);
-                    this->numOfNodesEvaluated++;
                     backup.push_back(neighbor);
                     //neighbor is either in open or closed and - can improve path
                 } else if (current->getTrailCost() + neighbor->getCost() < neighbor->getTrailCost()) {
-                    //todo - need to add this case?
-                    //in closed
-                    /*  if (!inOpen(open,neighbor)) {
-                          deleteFromClose(closed,neighbor);
-                          open.push(neighbor);
-                          backup.push_back(neighbor);
-                      }*///else??
                     neighbor->setTrailCost(current->getTrailCost() + neighbor->getCost());
                     neighbor->setComeFrom(current);
                     open = updatePriorityQ(open);

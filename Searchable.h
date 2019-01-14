@@ -16,32 +16,8 @@ protected:
     std::vector<State<T> *> structure;
     State<T> *initialState;
     State<T> *goal;
-    vector<pair<double, pair<int, int>>> stateLocations;
-    int row;
-    int col;
-    pair<int, int> source;
-    pair<int, int> dest;
+
 public:
-    pair<int, int> getSource(){
-        return source;
-    }
-    pair<int, int> getDest() {
-        return dest;
-    }
-    int getRow(){ return row;}
-    int getCol(){ return col;}
-    void setRowAndCol(int row, int col) {
-        this->row = row;
-        this->col = col;
-    }
-    void setSrcsAndDest(pair<int, int> source, pair<int, int> dest) {
-        this->source = source;
-        this->dest = dest;
-    }
-
-    void setStateLocations(vector<pair<double, pair<int, int>>> locations) { this->stateLocations = locations; }
-
-    vector<pair<double, pair<int, int>>> getStateLocations() { return stateLocations; }
 
     State<T> *getInitialState() { return initialState; }
 

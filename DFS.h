@@ -10,7 +10,7 @@
 using namespace std;
 
 template <class T>
-class DFS : Searcher<T> {
+class DFS : public Searcher<T> {
 public:
     string search(Searchable<T> *searchable) {
         vector<State<T> *> visited;
@@ -23,12 +23,14 @@ public:
         while (!stack.empty()) {
             current = stack.top();
             stack.pop();
+            this->numOfNodesEvaluated++;
 
             if (!inVisited(visited, current)) {
                 visited.push_back(current);
             }
 
             if(current->Equals(searchable->getGoalState())) {
+                cout<<"num of nodes: " << this->numOfNodesEvaluated<<endl;
                 return searchable->getPath();
             }
 
@@ -37,6 +39,7 @@ public:
                 //if a neighbors has not been visited then mark as visited and add to queue list
                 if (!inVisited(visited,neighbor)) {
                     neighbor->setComeFrom(current);
+                    neighbor->addCost(current->getTrailCost());
                     stack.push(neighbor);
                 }
             }

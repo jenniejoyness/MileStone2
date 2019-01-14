@@ -24,15 +24,18 @@ public:
             current = queue.front();
             
             if(current->Equals(searchable->getGoalState())){
+                cout<<"num of nodes: " << this->numOfNodesEvaluated<<endl;
                 return searchable->getPath();
             }
             neighbors = searchable->getNeighbors(current);
             queue.pop();
+            this->numOfNodesEvaluated++;
 
             for (State<T> *neighbor : neighbors) {
                 //if a neighbors has not been visited then mark as visited and add to queue list
                 if (!inVisited(visited,neighbor)) {
                     neighbor->setComeFrom(current);
+                    neighbor->addCost(current->getTrailCost());
                     visited.push_back(neighbor);
                     queue.push(neighbor);
                 }

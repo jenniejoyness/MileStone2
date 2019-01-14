@@ -6,6 +6,7 @@
 #define MILESTONE2_STATE_H
 
 #include <vector>
+#include <cfloat>
 
 using namespace std;
 
@@ -15,12 +16,14 @@ private:
     T state;
     double cost;
     double trailCost;
+    double Fheuristics;
     State<T> *comeFrom;
+
 
 public:
     State() {}
 
-    State<T>(T state, double cost) : state(state), cost(cost), trailCost(cost), comeFrom(nullptr) {}
+    State<T>(T state, double cost) : state(state), cost(cost), trailCost(cost), comeFrom(nullptr),Fheuristics(FLT_MAX) {}
 
     double getCost() const { return cost; }
 
@@ -43,6 +46,12 @@ public:
 
     State<T>* getComaFrom() { return comeFrom; }
     //void setComeFrom(const State<T> &comeFrom);
+    void setFheuristics(double f){
+        this->Fheuristics = f;
+    }
+    double getFheuristics(){
+        return Fheuristics;
+    }
 };
 
 

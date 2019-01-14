@@ -51,7 +51,9 @@ void MyClientHandler::handleClient(int socketId) {
             /* Write a response to the client */
             chr = const_cast<char *>(solution.c_str());
             n = write(socketId, chr, strlen(chr));
-            cout << "in myclienthandler:" + solution << endl;
+            cout << "solution:" + solution << endl;
+            cout << "trail cost:" + to_string(matrix->getGoalState()->getTrailCost()) << endl;
+
 
             if (n < 0) {
                 perror("ERROR writing to socket");
@@ -67,10 +69,6 @@ void MyClientHandler::handleClient(int socketId) {
 }
 
 Searchable<Point>* MyClientHandler::makeMatrix(vector<string> tempProb) {
-    typedef pair<int, int> Pair;
-    typedef pair<double, Pair> pPair;
-
-    vector<pPair> pairs;
     vector<State<Point>*> searchable;
     vector<string> chopped;
 
@@ -98,15 +96,10 @@ Searchable<Point>* MyClientHandler::makeMatrix(vector<string> tempProb) {
             }else{
                 searchable.push_back(new State<Point>(Point(i,j),stoi(chopped[j])));
             }
-            pairs.emplace_back(pPair(stod(chopped[j]),Pair(i,j)));
-        }
+              }
 
     }
     Searchable<Point>* matrix = new Matrix(searchable,initialState,goalState);
-    matrix->setStateLocations(pairs);
-    matrix->setRowAndCol(row,col);
-    matrix->setSrcsAndDest(Pair(matrix->getInitialState()->getState().getX(),matrix->getInitialState()->getState().getY()),
-                           Pair(matrix->getGoalState()->getState().getX(), matrix->getGoalState()->getState().getY()));
     return matrix;
 }
 
