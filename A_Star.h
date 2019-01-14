@@ -350,22 +350,22 @@ public:
             pair<int, int> point1 = Path.top();
             Path.pop();
             pair<int, int> point2 = Path.top();
-            if (point1.first == point2.first && point1.second> point2.second) {
-                result += "R";
-            }
-            if (point1.first == point2.first && point1.second < point2.second) {
+            if (point1.first == point2.first && point1.second > point2.second) {
                 result += "L";
             }
+            if (point1.first == point2.first && point1.second < point2.second) {
+                result += "R";
+            }
             if (point1.first > point2.first && point1.second == point2.second) {
-                result+= "D";
+                result += "U";
             }
             if (point1.first < point2.first && point1.second == point2.second) {
-                result+= "U";
+                result += "D";
             }
             k++;
 
         }
-        reverse(result.begin(), result.end());
+        //reverse(result.begin(), result.end());
         return result;
     }
 };
