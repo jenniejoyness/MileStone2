@@ -12,6 +12,7 @@
 class MyParallelServer : public Server {
 private:
     vector<pthread_t> threads;
+    vector<pair<pthread_t,int>> closeServer;
     struct params {
         ClientHandler* clientHandler;
         int sockfd;

@@ -6,6 +6,8 @@
 #include <cstdio>
 #include <thread>
 #include <iostream>
+#include <unistd.h>
+#include <bits/sigthread.h>
 #include "MyParallelServer.h"
 
 void MyParallelServer::open(int port, ClientHandler *c) {
@@ -40,7 +42,7 @@ void MyParallelServer::open(int port, ClientHandler *c) {
     listen(sockfd, SOMAXCONN);
     clilen = sizeof(cli_addr);
     timeval timeout;
-    timeout.tv_sec = 100000;
+    timeout.tv_sec = 10;
     timeout.tv_usec = 0;
 
     setsockopt(sockfd, SOL_SOCKET, SO_RCVTIMEO, (char *)&timeout, sizeof(timeout));
@@ -54,6 +56,7 @@ void MyParallelServer::open(int port, ClientHandler *c) {
             if (errno == EWOULDBLOCK) {
                 //time out!
                 stop();
+                break;
             }	else	{
                 perror("other error");
                 exit(3);
@@ -67,6 +70,7 @@ void MyParallelServer::open(int port, ClientHandler *c) {
         if (pthread_create(&thread, nullptr, MyParallelServer::parallelService,info) != 0){
             perror("thread failed");
         }
+        closeServer.push_back(pair<pthread_t,int>(thread,newsockfd));
         threads.push_back(thread);
 
     }
@@ -85,4 +89,10 @@ void MyParallelServer::stop() {
     for (auto thread: this->threads) {
         pthread_join(thread, nullptr);
     }
+    for(auto pair: this->closeServer){
+        close(pair.first);
+        //todo - how to close threads
+    }
+
+
 }

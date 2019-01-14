@@ -1,551 +1,323 @@
 
-#include <iostream>
-#include "MySerialServer.h"
-#include "MyTestClientHandler.h"
-#include "Solver.h"
-#include "StringReverser.h"
-#include "State.h"
-#include "BestFirstSearch.h"
-#include "SearcherSolver.h"
-#include "MyClientHandler.h"
-#include "Matrix.h"
-#include "BFS.h"
-#include "DFS.h"
-#include "A_Star.h"
-#include "MyParallelServer.h"
-
-using namespace std;
-
-
-#include <queue>
-
-int main() {
-
-    /* std::cout << "Hello, World!" << std::endl;
-     Server* d = new MyParallelServer();
-     Solver<Searchable<Point>*,string>* solver = new SearcherSolver(new A_Star<Point>());
-     CacheManager* cacheManager = new FileCacheManager();
-     ClientHandler* ds = new MyClientHandler(solver, cacheManager);
-     d->open(5400,ds);*/
-    CacheManager* cacheManager = new FileCacheManager();
-    bool t = cacheManager->hasSolution("2,22,20,01,0");
-    cout<<t<<endl;
-
-   /* State<Point> *initial = new State<Point>(Point(0, 0), 2);
-    State<Point> *goal = new State<Point>(Point(2, 2), 1);
-
-    vector<State<Point> *> searchable;
-    searchable.push_back(initial);
-    searchable.push_back(new State<Point>(Point(0, 1), 3));
-    searchable.push_back(new State<Point>(Point(0, 2), 100));
-    searchable.push_back(new State<Point>(Point(1, 0), 100));
-    searchable.push_back(new State<Point>(Point(1, 1), 1));
-    searchable.push_back(new State<Point>(Point(1, 2), 2));
-    searchable.push_back(new State<Point>(Point(2, 0), 2));
-    searchable.push_back(new State<Point>(Point(2, 1), 3));
-    searchable.push_back(goal);
-
-
-    Searchable<Point> *m = new Matrix(searchable, initial, goal);
-    string s;
-    Searcher<Point> *b = new BFS<Point>;
-    string x = b->search(m);
-    cout << "solution:"<<x << endl;
-    cout << "trail cost:"<<m->getGoalState()->getTrailCost() << endl;*/
-
-/*    if (cacheManager->hasSolution(prob)) {
-        s = cacheManager->getSolution(prob);
-        cout<<"found in file"<<endl;
-    } else {
-        cout<<"solved"<<endl;
-        s = solver->solve(m);
-        //solution = to_string(matrix->getGoalState()->getTrailCost());
-        cacheManager->updateData(prob, s);
-        cacheManager->saveToDisk(prob, s);
-    }*/
-
-/*
- State<Point>* initial = new State<Point>(Point(0, 0), 3);
- State<Point>* goal = new State<Point>(Point(2, 2), 6);
-
- vector<State<Point> *> searchable;
- searchable.push_back(initial);
- searchable.push_back(new State<Point>(Point(0, 1), 2));
- searchable.push_back(new State<Point>(Point(0, 2), 2));
- searchable.push_back(new State<Point>(Point(1, 0), 1));
- searchable.push_back(new State<Point>(Point(1, 1), 7));
- searchable.push_back(new State<Point>(Point(1, 2), 5));
- searchable.push_back(new State<Point>(Point(2, 0), 100));
- searchable.push_back(new State<Point>(Point(2, 1), 4));
- searchable.push_back(goal);
-
-
-
- Searchable<Point>* m = new Matrix(searchable, initial, goal);
- DFS<Point> * b = new DFS<Point>;
- string x = b->search(m);
- cout << x << endl;*/
-
-    while (true) {}
-
-
-    return 0;
-}
-/*
-
-// A C++ Program to implement A* Search Algorithm
-#include<bits/stdc++.h>
-using namespace std;
-
-#define ROW 2
-#define COL 3
-
-// Creating a shortcut for int, int pair type
-typedef pair<int, int> Pair;
-
-// Creating a shortcut for pair<int, pair<int, int>> type
-typedef pair<double, pair<int, int>> pPair;
-
-// A structure to hold the neccesary parameters
-struct cell
-{
-    // Row and Column index of its parent
-    // Note that 0 <= i <= ROW-1 & 0 <= j <= COL-1
-    int parent_i, parent_j;
-    // f = g + h
-    double f, g, h;
-};
-
-// A Utility Function to check whether given cell (row, col)
-// is a valid cell or not.
-bool isValid(int row, int col)
-{
-    // Returns true if row number and column number
-    // is in range
-    return (row >= 0) && (row < ROW) &&
-           (col >= 0) && (col < COL);
-}
-
-// A Utility Function to check whether the given cell is
-// blocked or not
-bool isUnBlocked(int grid[][COL], int row, int col)
-{
-    // Returns true if the cell is not blocked else false
-    if (grid[row][col] != -1)
-        return (true);
-    else
-        return (false);
-}
-
-// A Utility Function to check whether destination cell has
-// been reached or not
-bool isDestination(int row, int col, Pair dest)
-{
-    if (row == dest.first && col == dest.second)
-        return (true);
-    else
-        return (false);
-}
-
-// A Utility Function to calculate the 'h' heuristics.
-double calculateHValue(int row, int col, Pair dest)
-{
-    // Return using the distance formula
-    return abs(row-dest.first) + abs(col-dest.second);
-}
-
-// A Utility Function to trace the path from the source
-// to destination
-void tracePath(cell cellDetails[][COL], Pair dest)
-{
-    printf ("\nThe Path is ");
-    int row = dest.first;
-    int col = dest.second;
-
-    stack<Pair> Path;
-
-    while (!(cellDetails[row][col].parent_i == row
-             && cellDetails[row][col].parent_j == col ))
-    {
-        Path.push (make_pair (row, col));
-        int temp_row = cellDetails[row][col].parent_i;
-        int temp_col = cellDetails[row][col].parent_j;
-        row = temp_row;
-        col = temp_col;
-    }
-
-    Path.push (make_pair (row, col));
-    while (!Path.empty())
-    {
-        pair<int,int> p = Path.top();
-        Path.pop();
-        printf("-> (%d,%d) ",p.first,p.second);
-    }
-
-    return;
-}
-
-// A Function to find the shortest path between
-// a given source cell to a destination cell according
-// to A* Search Algorithm
-void aStarSearch(int grid[][COL], Pair src, Pair dest)
-{
-    // If the source is out of range
-    if (isValid (src.first, src.second) == false)
-    {
-        printf ("Source is invalid\n");
-        return;
-    }
-
-    // If the destination is out of range
-    if (isValid (dest.first, dest.second) == false)
-    {
-        printf ("Destination is invalid\n");
-        return;
-    }
-
-    // Either the source or the destination is blocked
-    if (isUnBlocked(grid, src.first, src.second) == false ||
-        isUnBlocked(grid, dest.first, dest.second) == false)
-    {
-        printf ("Source or the destination is blocked\n");
-        return;
-    }
-
-    // If the destination cell is the same as source cell
-    if (isDestination(src.first, src.second, dest) == true)
-    {
-        printf ("We are already at the destination\n");
-        return;
-    }
-
-    // Create a closed list and initialise it to false which means
-    // that no cell has been included yet
-    // This closed list is implemented as a boolean 2D array
-    bool closedList[ROW][COL];
-    memset(closedList, false, sizeof (closedList));
-
-    // Declare a 2D array of structure to hold the details
-    //of that cell
-    cell cellDetails[ROW][COL];
-
-    int i, j;
-
-    for (i=0; i<ROW; i++)
-    {
-        for (j=0; j<COL; j++)
-        {
-            cellDetails[i][j].f = FLT_MAX;
-            cellDetails[i][j].g = FLT_MAX;
-            cellDetails[i][j].h = FLT_MAX;
-            cellDetails[i][j].parent_i = -1;
-            cellDetails[i][j].parent_j = -1;
-        }
-    }
-
-    // Initialising the parameters of the starting node
-    i = src.first, j = src.second;
-    cellDetails[i][j].f = 0.0;
-    cellDetails[i][j].g = 0.0;
-    cellDetails[i][j].h = 0.0;
-    cellDetails[i][j].parent_i = i;
-    cellDetails[i][j].parent_j = j;
-
-    */
-/*
-     Create an open list having information as-
-     <f, <i, j>>
-     where f = g + h,
-     and i, j are the row and column index of that cell
-     Note that 0 <= i <= ROW-1 & 0 <= j <= COL-1
-     This open list is implenented as a set of pair of pair.*//*
-
-    set<pPair> openList;
-
-    // Put the starting cell on the open list and set its
-    // 'f' as 0
-    openList.insert(make_pair (0.0, make_pair (i, j)));
-
-    // We set this boolean value as false as initially
-    // the destination is not reached.
-    bool foundDest = false;
-
-    while (!openList.empty()) {
-        pPair p = *openList.begin();
-
-        // Remove this vertex from the open list
-        openList.erase(openList.begin());
-
-        // Add this vertex to the closed list
-        i = p.second.first;
-        j = p.second.second;
-        closedList[i][j] = true;
-
-        */
-/*
-         Generating all the 8 successor of this cell
-
-             N.W   N   N.E
-               \   |   /
-                \  |  /
-             W----Cell----E
-                  / | \
-                /   |  \
-             S.W    S   S.E
-
-         Cell-->Popped Cell (i, j)
-         N -->  North       (i-1, j)
-         S -->  South       (i+1, j)
-         E -->  East        (i, j+1)
-         W -->  West           (i, j-1)
-         N.E--> North-East  (i-1, j+1)
-         N.W--> North-West  (i-1, j-1)
-         S.E--> South-East  (i+1, j+1)
-         S.W--> South-West  (i+1, j-1)*//*
-
-
-        // To store the 'g', 'h' and 'f' of the 8 successors
-        double gNew, hNew, fNew;
-
-        //----------- 1st Successor (North) ------------
-
-        // Only process this cell if this is a valid one
-        if (isValid(i-1, j) == true)
-        {
-            // If the destination cell is the same as the
-            // current successor
-            if (isDestination(i-1, j, dest) == true)
-            {
-                // Set the Parent of the destination cell
-                cellDetails[i-1][j].parent_i = i;
-                cellDetails[i-1][j].parent_j = j;
-                printf ("The destination cell is found\n");
-                tracePath (cellDetails, dest);
-                foundDest = true;
-                return;
-            }
-                // If the successor is already on the closed
-                // list or if it is blocked, then ignore it.
-                // Else do the following
-            else if (closedList[i-1][j] == false &&
-                     isUnBlocked(grid, i-1, j) == true)
-            {
-                gNew = cellDetails[i][j].g + 1.0;
-                hNew = calculateHValue (i-1, j, dest);
-                fNew = gNew + hNew;
-
-                // If it isn’t on the open list, add it to
-                // the open list. Make the current square
-                // the parent of this square. Record the
-                // f, g, and h costs of the square cell
-                //                OR
-                // If it is on the open list already, check
-                // to see if this path to that square is better,
-                // using 'f' cost as the measure.
-                if (cellDetails[i-1][j].f == FLT_MAX ||
-                    cellDetails[i-1][j].f > fNew)
-                {
-                    openList.insert( make_pair(fNew,
-                                               make_pair(i-1, j)));
-
-                    // Update the details of this cell
-                    cellDetails[i-1][j].f = fNew;
-                    cellDetails[i-1][j].g = gNew;
-                    cellDetails[i-1][j].h = hNew;
-                    cellDetails[i-1][j].parent_i = i;
-                    cellDetails[i-1][j].parent_j = j;
-                }
-            }
-        }
-
-        //----------- 2nd Successor (South) ------------
-
-        // Only process this cell if this is a valid one
-        if (isValid(i+1, j) == true)
-        {
-            // If the destination cell is the same as the
-            // current successor
-            if (isDestination(i+1, j, dest) == true)
-            {
-                // Set the Parent of the destination cell
-                cellDetails[i+1][j].parent_i = i;
-                cellDetails[i+1][j].parent_j = j;
-                printf("The destination cell is found\n");
-                tracePath(cellDetails, dest);
-                foundDest = true;
-                return;
-            }
-                // If the successor is already on the closed
-                // list or if it is blocked, then ignore it.
-                // Else do the following
-            else if (closedList[i+1][j] == false &&
-                     isUnBlocked(grid, i+1, j) == true)
-            {
-                gNew = cellDetails[i][j].g + 1.0;
-                hNew = calculateHValue(i+1, j, dest);
-                fNew = gNew + hNew;
-
-                // If it isn’t on the open list, add it to
-                // the open list. Make the current square
-                // the parent of this square. Record the
-                // f, g, and h costs of the square cell
-                //                OR
-                // If it is on the open list already, check
-                // to see if this path to that square is better,
-                // using 'f' cost as the measure.
-                if (cellDetails[i+1][j].f == FLT_MAX ||
-                    cellDetails[i+1][j].f > fNew)
-                {
-                    openList.insert( make_pair (fNew, make_pair (i+1, j)));
-                    // Update the details of this cell
-                    cellDetails[i+1][j].f = fNew;
-                    cellDetails[i+1][j].g = gNew;
-                    cellDetails[i+1][j].h = hNew;
-                    cellDetails[i+1][j].parent_i = i;
-                    cellDetails[i+1][j].parent_j = j;
-                }
-            }
-        }
-
-        //----------- 3rd Successor (East) ------------
-
-        // Only process this cell if this is a valid one
-        if (isValid (i, j+1) == true)
-        {
-            // If the destination cell is the same as the
-            // current successor
-            if (isDestination(i, j+1, dest) == true)
-            {
-                // Set the Parent of the destination cell
-                cellDetails[i][j+1].parent_i = i;
-                cellDetails[i][j+1].parent_j = j;
-                printf("The destination cell is found\n");
-                tracePath(cellDetails, dest);
-                foundDest = true;
-                return;
-            }
-
-                // If the successor is already on the closed
-                // list or if it is blocked, then ignore it.
-                // Else do the following
-            else if (closedList[i][j+1] == false &&
-                     isUnBlocked (grid, i, j+1) == true)
-            {
-                gNew = cellDetails[i][j].g + 1.0;
-                hNew = calculateHValue (i, j+1, dest);
-                fNew = gNew + hNew;
-
-                // If it isn’t on the open list, add it to
-                // the open list. Make the current square
-                // the parent of this square. Record the
-                // f, g, and h costs of the square cell
-                //                OR
-                // If it is on the open list already, check
-                // to see if this path to that square is better,
-                // using 'f' cost as the measure.
-                if (cellDetails[i][j+1].f == FLT_MAX ||
-                    cellDetails[i][j+1].f > fNew)
-                {
-                    openList.insert( make_pair(fNew,
-                                               make_pair (i, j+1)));
-
-                    // Update the details of this cell
-                    cellDetails[i][j+1].f = fNew;
-                    cellDetails[i][j+1].g = gNew;
-                    cellDetails[i][j+1].h = hNew;
-                    cellDetails[i][j+1].parent_i = i;
-                    cellDetails[i][j+1].parent_j = j;
-                }
-            }
-        }
-
-        //----------- 4th Successor (West) ------------
-
-        // Only process this cell if this is a valid one
-        if (isValid(i, j-1) == true)
-        {
-            // If the destination cell is the same as the
-            // current successor
-            if (isDestination(i, j-1, dest) == true)
-            {
-                // Set the Parent of the destination cell
-                cellDetails[i][j-1].parent_i = i;
-                cellDetails[i][j-1].parent_j = j;
-                printf("The destination cell is found\n");
-                tracePath(cellDetails, dest);
-                foundDest = true;
-                return;
-            }
-
-                // If the successor is already on the closed
-                // list or if it is blocked, then ignore it.
-                // Else do the following
-            else if (closedList[i][j-1] == false &&
-                     isUnBlocked(grid, i, j-1) == true)
-            {
-                gNew = cellDetails[i][j].g + 1.0;
-                hNew = calculateHValue(i, j-1, dest);
-                fNew = gNew + hNew;
-
-                // If it isn’t on the open list, add it to
-                // the open list. Make the current square
-                // the parent of this square. Record the
-                // f, g, and h costs of the square cell
-                //                OR
-                // If it is on the open list already, check
-                // to see if this path to that square is better,
-                // using 'f' cost as the measure.
-                if (cellDetails[i][j-1].f == FLT_MAX ||
-                    cellDetails[i][j-1].f > fNew)
-                {
-                    openList.insert( make_pair (fNew,
-                                                make_pair (i, j-1)));
-
-                    // Update the details of this cell
-                    cellDetails[i][j-1].f = fNew;
-                    cellDetails[i][j-1].g = gNew;
-                    cellDetails[i][j-1].h = hNew;
-                    cellDetails[i][j-1].parent_i = i;
-                    cellDetails[i][j-1].parent_j = j;
-                }
-            }
-        }
-
-
-        }
-    // When the destination cell is not found and the open
-    // list is empty, then we conclude that we failed to
-    // reach the destiantion cell. This may happen when the
-    // there is no way to destination cell (due to blockages)
-    if (foundDest == false)
-        printf("Failed to find the Destination Cell\n");
-
-    return;
-    }
-
-
-
-// Driver program to test above function
-int main() {
-    */
-/* Description of the Grid-
-     1--> The cell is not blocked
-     0--> The cell is blocked    *//*
-
-    int grid[ROW][COL] =
-
-                    {{1, -1, 1},
-                    {1, 1, 1}};
-
-
-    // Source is the left-most bottom-most corner
-    Pair src = make_pair(0, 0);
-
-    // Destination is the left-most top-most corner
-    Pair dest = make_pair(1, 2);
-
-    aStarSearch(grid, src, dest);
-
-    return (0);
-}
+    #include <iostream>
+    #include "MySerialServer.h"
+    #include "MyTestClientHandler.h"
+    #include "Solver.h"
+    #include "StringReverser.h"
+    #include "State.h"
+    #include "BestFirstSearch.h"
+    #include "SearcherSolver.h"
+    #include "MyClientHandler.h"
+    #include "Matrix.h"
+    #include "BFS.h"
+    #include "DFS.h"
+    #include "A_Star.h"
+    #include "MyParallelServer.h"
+#include "SplitClass.h"
+#include <fstream>
+
+    using namespace std;
+
+
+    #include <queue>
+
+    int main() {
+
+       /* std::cout << "Hello, World!" << std::endl;
+         Server* d = new MyParallelServer();
+         Solver<Searchable<Point>*,string>* solver = new SearcherSolver(new A_Star<Point>());
+         CacheManager* cacheManager = new FileCacheManager();
+         ClientHandler* ds = new MyClientHandler(solver, cacheManager);
+         d->open(5400,ds);
 */
+        vector<State<Point> *> searchable;
+        /*
+        State<Point> *initial = new State<Point>(Point(0, 0), 2);
+        searchable.push_back(new State<Point>(Point(0, 1), 3));
+        searchable.push_back(new State<Point>(Point(0, 2), 100));
+        searchable.push_back(new State<Point>(Point(0, 3), 100));
+        searchable.push_back(new State<Point>(Point(0, 4), 1));
+        searchable.push_back(new State<Point>(Point(0, 5), 2));
+        searchable.push_back(new State<Point>(Point(0, 6), 2));
+        searchable.push_back(new State<Point>(Point(0, 7), 3));
+        searchable.push_back(new State<Point>(Point(0, 8), 2));
+        searchable.push_back(new State<Point>(Point(0, 9), 2));
+        searchable.push_back(new State<Point>(Point(0, 10), 3));
+        searchable.push_back(new State<Point>(Point(0, 11), 2));
+        searchable.push_back(new State<Point>(Point(0, 12), 2));
+        searchable.push_back(new State<Point>(Point(0, 13), 2));
+        searchable.push_back(new State<Point>(Point(0, 14), 2));
+
+        searchable.push_back(new State<Point>(Point(1, 0), 3));
+        searchable.push_back(new State<Point>(Point(1, 1), 100));
+        searchable.push_back(new State<Point>(Point(1, 2), 100));
+        searchable.push_back(new State<Point>(Point(1, 3), 1));
+        searchable.push_back(new State<Point>(Point(1, 4), 2));
+        searchable.push_back(new State<Point>(Point(1, 5), 2));
+        searchable.push_back(new State<Point>(Point(1, 6), 3));
+        searchable.push_back(new State<Point>(Point(1, 7), 3));
+        searchable.push_back(new State<Point>(Point(1, 8), 3));
+        searchable.push_back(new State<Point>(Point(1, 9), 2));
+        searchable.push_back(new State<Point>(Point(1, 10), 2));
+        searchable.push_back(new State<Point>(Point(1, 11), 2));
+        searchable.push_back(new State<Point>(Point(1, 12), 2));
+        searchable.push_back(new State<Point>(Point(1, 13), 2));
+        searchable.push_back(new State<Point>(Point(1, 14), 2));
+
+        searchable.push_back(new State<Point>(Point(2, 0), 3));
+        searchable.push_back(new State<Point>(Point(2, 1), 100));
+        searchable.push_back(new State<Point>(Point(2, 2), 100));
+        searchable.push_back(new State<Point>(Point(2, 3), 1));
+        searchable.push_back(new State<Point>(Point(2, 4), 2));
+        searchable.push_back(new State<Point>(Point(2, 5), 2));
+        searchable.push_back(new State<Point>(Point(2, 6), 3));
+        searchable.push_back(new State<Point>(Point(2, 7), 3));
+        searchable.push_back(new State<Point>(Point(2, 8), 3));
+        searchable.push_back(new State<Point>(Point(2, 9), 2));
+        searchable.push_back(new State<Point>(Point(2, 14), 2));
+        searchable.push_back(new State<Point>(Point(2, 14), 2));
+        searchable.push_back(new State<Point>(Point(2, 14), 2));
+        searchable.push_back(new State<Point>(Point(2, 14), 2));
+        searchable.push_back(new State<Point>(Point(2, 14), 2));
+
+        searchable.push_back(new State<Point>(Point(3, 0), 3));
+        searchable.push_back(new State<Point>(Point(3, 1), 100));
+        searchable.push_back(new State<Point>(Point(3, 2), 100));
+        searchable.push_back(new State<Point>(Point(3, 3), 1));
+        searchable.push_back(new State<Point>(Point(3, 4), 2));
+        searchable.push_back(new State<Point>(Point(3, 5), 2));
+        searchable.push_back(new State<Point>(Point(3, 6), 3));
+        searchable.push_back(new State<Point>(Point(3, 7), 3));
+        searchable.push_back(new State<Point>(Point(3, 8), 3));
+        searchable.push_back(new State<Point>(Point(3, 9), 2));
+        searchable.push_back(new State<Point>(Point(3, 10), 2));
+        searchable.push_back(new State<Point>(Point(3, 11), 2));
+        searchable.push_back(new State<Point>(Point(3, 12), 2));
+        searchable.push_back(new State<Point>(Point(3, 13), 2));
+        searchable.push_back(new State<Point>(Point(3, 14), 2));
+
+        searchable.push_back(new State<Point>(Point(4, 0), 3));
+        searchable.push_back(new State<Point>(Point(4, 1), 100));
+        searchable.push_back(new State<Point>(Point(4, 2), 100));
+        searchable.push_back(new State<Point>(Point(4, 3), 1));
+        searchable.push_back(new State<Point>(Point(4, 4), 2));
+        searchable.push_back(new State<Point>(Point(4, 5), 2));
+        searchable.push_back(new State<Point>(Point(4, 6), 3));
+        searchable.push_back(new State<Point>(Point(4, 7), 3));
+        searchable.push_back(new State<Point>(Point(4, 8), 3));
+        searchable.push_back(new State<Point>(Point(4, 9), 2));
+        searchable.push_back(new State<Point>(Point(4, 10), 2));
+        searchable.push_back(new State<Point>(Point(4, 11), 2));
+        searchable.push_back(new State<Point>(Point(4, 12), 2));
+        searchable.push_back(new State<Point>(Point(4, 13), 2));
+        searchable.push_back(new State<Point>(Point(4, 14), 2));
+
+        searchable.push_back(new State<Point>(Point(5, 0), 3));
+        searchable.push_back(new State<Point>(Point(5, 1), 100));
+        searchable.push_back(new State<Point>(Point(5, 2), 100));
+        searchable.push_back(new State<Point>(Point(5, 3), 1));
+        searchable.push_back(new State<Point>(Point(5, 4), 2));
+        searchable.push_back(new State<Point>(Point(5, 5), 2));
+        searchable.push_back(new State<Point>(Point(5, 6), 3));
+        searchable.push_back(new State<Point>(Point(5, 7), 3));
+        searchable.push_back(new State<Point>(Point(5, 8), 3));
+        searchable.push_back(new State<Point>(Point(5, 9), 2));
+        searchable.push_back(new State<Point>(Point(5, 10), 2));
+        searchable.push_back(new State<Point>(Point(5, 11), 2));
+        searchable.push_back(new State<Point>(Point(5, 12), 2));
+        searchable.push_back(new State<Point>(Point(5, 13), 2));
+        searchable.push_back(new State<Point>(Point(5, 14), 2));
+
+        searchable.push_back(new State<Point>(Point(6, 0), 3));
+        searchable.push_back(new State<Point>(Point(6, 1), 100));
+        searchable.push_back(new State<Point>(Point(6, 2), 100));
+        searchable.push_back(new State<Point>(Point(6, 3), 1));
+        searchable.push_back(new State<Point>(Point(6, 4), 2));
+        searchable.push_back(new State<Point>(Point(6, 5), 2));
+        searchable.push_back(new State<Point>(Point(6, 6), 3));
+        searchable.push_back(new State<Point>(Point(6, 7), 3));
+        searchable.push_back(new State<Point>(Point(6, 8), 3));
+        searchable.push_back(new State<Point>(Point(6, 9), 2));
+        searchable.push_back(new State<Point>(Point(6, 10), 2));
+        searchable.push_back(new State<Point>(Point(6, 11), 2));
+        searchable.push_back(new State<Point>(Point(6, 12), 2));
+        searchable.push_back(new State<Point>(Point(6, 13), 2));
+        searchable.push_back(new State<Point>(Point(6, 14), 2));
+
+        searchable.push_back(new State<Point>(Point(7, 0), 3));
+        searchable.push_back(new State<Point>(Point(7, 1), 100));
+        searchable.push_back(new State<Point>(Point(7, 2), 100));
+        searchable.push_back(new State<Point>(Point(7, 3), 1));
+        searchable.push_back(new State<Point>(Point(7, 4), 2));
+        searchable.push_back(new State<Point>(Point(7, 5), 2));
+        searchable.push_back(new State<Point>(Point(7, 6), 3));
+        searchable.push_back(new State<Point>(Point(7, 7), 3));
+        searchable.push_back(new State<Point>(Point(7, 8), 3));
+        searchable.push_back(new State<Point>(Point(7, 9), 2));
+        searchable.push_back(new State<Point>(Point(7, 10), 2));
+        searchable.push_back(new State<Point>(Point(7, 11), 2));
+        searchable.push_back(new State<Point>(Point(7, 12), 2));
+        searchable.push_back(new State<Point>(Point(7, 13), 2));
+        searchable.push_back(new State<Point>(Point(7, 14), 2));
+
+        searchable.push_back(new State<Point>(Point(8, 0), 3));
+        searchable.push_back(new State<Point>(Point(8, 1), 100));
+        searchable.push_back(new State<Point>(Point(8, 2), 100));
+        searchable.push_back(new State<Point>(Point(8, 3), 1));
+        searchable.push_back(new State<Point>(Point(8, 4), 2));
+        searchable.push_back(new State<Point>(Point(8, 5), 2));
+        searchable.push_back(new State<Point>(Point(8, 6), 3));
+        searchable.push_back(new State<Point>(Point(8, 7), 3));
+        searchable.push_back(new State<Point>(Point(8, 8), 3));
+        searchable.push_back(new State<Point>(Point(8, 9), 2));
+        searchable.push_back(new State<Point>(Point(8, 10), 2));
+        searchable.push_back(new State<Point>(Point(8, 11), 2));
+        searchable.push_back(new State<Point>(Point(8, 12), 2));
+        searchable.push_back(new State<Point>(Point(8, 13), 2));
+        searchable.push_back(new State<Point>(Point(8, 14), 2));
+
+        searchable.push_back(new State<Point>(Point(9, 0), 3));
+        searchable.push_back(new State<Point>(Point(9, 1), 100));
+        searchable.push_back(new State<Point>(Point(9, 2), 100));
+        searchable.push_back(new State<Point>(Point(9, 3), 1));
+        searchable.push_back(new State<Point>(Point(9, 4), 2));
+        searchable.push_back(new State<Point>(Point(9, 5), 2));
+        searchable.push_back(new State<Point>(Point(9, 6), 3));
+        searchable.push_back(new State<Point>(Point(9, 7), 3));
+        searchable.push_back(new State<Point>(Point(9, 8), 3));
+        searchable.push_back(new State<Point>(Point(9, 9), 2));
+        searchable.push_back(new State<Point>(Point(9, 10), 2));
+        searchable.push_back(new State<Point>(Point(9, 11), 2));
+        searchable.push_back(new State<Point>(Point(9, 12), 2));
+        searchable.push_back(new State<Point>(Point(9, 13), 2));
+        searchable.push_back(new State<Point>(Point(9, 14), 2));
+
+        searchable.push_back(new State<Point>(Point(10, 0), 3));
+        searchable.push_back(new State<Point>(Point(10, 1), 100));
+        searchable.push_back(new State<Point>(Point(10, 2), 100));
+        searchable.push_back(new State<Point>(Point(10, 3), 1));
+        searchable.push_back(new State<Point>(Point(10, 4), 2));
+        searchable.push_back(new State<Point>(Point(10, 5), 2));
+        searchable.push_back(new State<Point>(Point(10, 6), 3));
+        searchable.push_back(new State<Point>(Point(10, 7), 3));
+        searchable.push_back(new State<Point>(Point(10, 8), 3));
+        searchable.push_back(new State<Point>(Point(10, 9), 2));
+        State<Point> *goal = new State<Point>(Point(10, 10), 1);
+        searchable.push_back(new State<Point>(Point(10, 11), 2));
+        searchable.push_back(new State<Point>(Point(10, 12), 2));
+        searchable.push_back(new State<Point>(Point(10, 13), 2));
+        searchable.push_back(new State<Point>(Point(10, 14), 2));
+
+        searchable.push_back(new State<Point>(Point(11, 0), 2));
+        searchable.push_back(new State<Point>(Point(11, 1), 2));
+        searchable.push_back(new State<Point>(Point(11, 2), 2));
+        searchable.push_back(new State<Point>(Point(11, 3), 2));
+        searchable.push_back(new State<Point>(Point(11, 4), 2));
+        searchable.push_back(new State<Point>(Point(11, 5), 2));
+        searchable.push_back(new State<Point>(Point(11, 6), 2));
+        searchable.push_back(new State<Point>(Point(11, 7), 2));
+        searchable.push_back(new State<Point>(Point(11, 8), 2));
+        searchable.push_back(new State<Point>(Point(11, 9), 2));
+        searchable.push_back(new State<Point>(Point(11, 10), 2));
+        searchable.push_back(new State<Point>(Point(11, 11), 2));
+        searchable.push_back(new State<Point>(Point(11, 12), 2));
+        searchable.push_back(new State<Point>(Point(11, 13), 2));
+        searchable.push_back(new State<Point>(Point(11, 14), 2));
+
+        searchable.push_back(new State<Point>(Point(12, 0), 2));
+        searchable.push_back(new State<Point>(Point(12, 1), 2));
+        searchable.push_back(new State<Point>(Point(12, 2), 2));
+        searchable.push_back(new State<Point>(Point(12, 3), 2));
+        searchable.push_back(new State<Point>(Point(12, 4), 2));
+        searchable.push_back(new State<Point>(Point(12, 5), 2));
+        searchable.push_back(new State<Point>(Point(12, 6), 2));
+        searchable.push_back(new State<Point>(Point(12, 7), 2));
+        searchable.push_back(new State<Point>(Point(12, 8), 2));
+        searchable.push_back(new State<Point>(Point(12, 9), 2));
+        searchable.push_back(new State<Point>(Point(12, 10), 2));
+        searchable.push_back(new State<Point>(Point(12, 11), 2));
+        searchable.push_back(new State<Point>(Point(12, 12), 2));
+        searchable.push_back(new State<Point>(Point(12, 13), 2));
+        searchable.push_back(new State<Point>(Point(12, 14), 2));
+
+        searchable.push_back(new State<Point>(Point(13, 0), 2));
+        searchable.push_back(new State<Point>(Point(13, 1), 2));
+        searchable.push_back(new State<Point>(Point(13, 2), 2));
+        searchable.push_back(new State<Point>(Point(13, 3), 2));
+        searchable.push_back(new State<Point>(Point(13, 4), 2));
+        searchable.push_back(new State<Point>(Point(13, 5), 2));
+        searchable.push_back(new State<Point>(Point(13, 6), 2));
+        searchable.push_back(new State<Point>(Point(13, 7), 2));
+        searchable.push_back(new State<Point>(Point(13, 8), 2));
+        searchable.push_back(new State<Point>(Point(13, 9), 2));
+        searchable.push_back(new State<Point>(Point(13, 10), 2));
+        searchable.push_back(new State<Point>(Point(13, 11), 2));
+        searchable.push_back(new State<Point>(Point(13, 12), 2));
+        searchable.push_back(new State<Point>(Point(13, 13), 2));
+        searchable.push_back(new State<Point>(Point(13, 14), 2));
+
+        searchable.push_back(new State<Point>(Point(14, 0), 2));
+        searchable.push_back(new State<Point>(Point(14, 1), 2));
+        searchable.push_back(new State<Point>(Point(14, 2), 2));
+        searchable.push_back(new State<Point>(Point(14, 3), 2));
+        searchable.push_back(new State<Point>(Point(14, 4), 2));
+        searchable.push_back(new State<Point>(Point(14, 5), 2));
+        searchable.push_back(new State<Point>(Point(14, 6), 2));
+        searchable.push_back(new State<Point>(Point(14, 7), 2));
+        searchable.push_back(new State<Point>(Point(14, 8), 2));
+        searchable.push_back(new State<Point>(Point(14, 9), 2));
+        searchable.push_back(new State<Point>(Point(14, 10), 2));
+        searchable.push_back(new State<Point>(Point(14, 11), 2));
+        searchable.push_back(new State<Point>(Point(14, 12), 2));
+        searchable.push_back(new State<Point>(Point(14, 13), 2));
+        searchable.push_back(new State<Point>(Point(14, 14), 2));
+
+        searchable.push_back(goal);
+        searchable.push_back(initial);*/
+        int size = 37;
+        string buffer;
+        ifstream fileSolutions;
+        fileSolutions.open("tests.txt", ifstream::in | istream::app);
+        if (!fileSolutions) {
+            throw "Failed opening file";
+        }
+        State<Point> *initialState = new State<Point>(Point(0,0),0);
+        State<Point> *goalState = new State<Point>(Point(size-1, size-1),0);
+        while (getline(fileSolutions, buffer)) {
+
+            for (int i = 0; i < size ;++i) {
+                vector<string> chopped = SplitClass::split(buffer,",");
+                for (int j = 0; j < size; ++j) {
+                    if (i == 0 && j == 0) {
+                        initialState->setCost(stod(chopped[j]));
+                        searchable.push_back(initialState);
+                        //set goal state cost
+                    } else if (i == size -1 && j == size -1 ) {
+                        goalState->setCost(stod(chopped[j]));
+                        searchable.push_back(goalState);
+                        //make states
+                    }else{
+                        searchable.push_back(new State<Point>(Point(i,j),stoi(chopped[j])));
+                    }
+
+                }
+
+            }
+        }
+
+
+
+
+
+
+        //Searchable<Point> *m = new Matrix(searchable, initial, goal);
+
+        Searchable<Point>* matrix = new Matrix(searchable,initialState,goalState);
+        string s;
+        Searcher<Point> *b = new BestFirstSearch<Point>;
+        string x = b->search(matrix);
+        cout << "solution:"<<x << endl;
+        cout << "trail cost:"<<matrix->getGoalState()->getTrailCost() << endl;
+
+        return 0;
+    }
