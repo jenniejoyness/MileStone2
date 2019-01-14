@@ -335,8 +335,8 @@ public:
         stack<Pair> Path;
 
         //*((blah + i*col) +j)
-        while ((*((cellDetails + i * col) + j)).parent_i != i
-                 && (*((cellDetails + i * col) + j)).parent_j != j) {
+        while (!((*((cellDetails + i * col) + j)).parent_i == i
+                 && (*((cellDetails + i * col) + j)).parent_j == j)) {
 
             Path.push(make_pair(i, j));
             i =(*((cellDetails + i * col) + j)).parent_i;

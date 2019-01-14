@@ -28,7 +28,7 @@ public:
                 visited.push_back(current);
             }
 
-            if(current->Equals(searchable->getGoalState())){
+            if(current->Equals(searchable->getGoalState())) {
                 return searchable->getPath();
             }
 
