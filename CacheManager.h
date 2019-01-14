@@ -10,6 +10,7 @@ using namespace std;
 class CacheManager {
 protected:
     map <string,string> data;
+    mutable pthread_mutex_t mutex;
 
 public:
     virtual bool hasSolution(string prob) = 0;

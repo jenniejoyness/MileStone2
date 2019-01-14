@@ -21,13 +21,15 @@ using namespace std;
 
 int main() {
 
-     std::cout << "Hello, World!" << std::endl;
+    /* std::cout << "Hello, World!" << std::endl;
      Server* d = new MyParallelServer();
      Solver<Searchable<Point>*,string>* solver = new SearcherSolver(new A_Star<Point>());
      CacheManager* cacheManager = new FileCacheManager();
      ClientHandler* ds = new MyClientHandler(solver, cacheManager);
-     d->open(5400,ds);
-
+     d->open(5400,ds);*/
+    CacheManager* cacheManager = new FileCacheManager();
+    bool t = cacheManager->hasSolution("2,22,20,01,0");
+    cout<<t<<endl;
 
    /* State<Point> *initial = new State<Point>(Point(0, 0), 2);
     State<Point> *goal = new State<Point>(Point(2, 2), 1);
