@@ -314,7 +314,7 @@
 
         Searchable<Point>* matrix = new Matrix(searchable,initialState,goalState);
         string s;
-        Searcher<Point> *b = new BestFirstSearch<Point>;
+        Searcher<Point> *b = new A_Star<Point>;
         string x = b->search(matrix);
         cout << "solution:"<<x << endl;
         cout << "trail cost:"<<matrix->getGoalState()->getTrailCost() << endl;
