@@ -38,6 +38,7 @@ public:
             this->numOfNodesEvaluated++;
             if (current->Equals(searchable->getGoalState())) {
                 cout<<"num of nodes: " << this->numOfNodesEvaluated<<endl;
+                this->numOfNodesEvaluated++;
                 return searchable->getPath();
             }
             neighbors = searchable->getNeighbors(current);

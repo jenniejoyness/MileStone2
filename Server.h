@@ -4,15 +4,16 @@
 
 #include "ClientHandler.h"
 
-class Server {
+namespace server_side {
+    class Server {
 
-protected:
-bool shouldStop = false;
+    public:
+        virtual void open(int port, ClientHandler *c) = 0;
 
-public:
-virtual void open(int port, ClientHandler* c) = 0;
-virtual void stop() = 0;
+        virtual void stop() = 0;
 
-};
+        virtual ~ Server() = default;
+    };
+}
 
 #endif //MILESTONE2_SERVER_H

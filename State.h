@@ -21,8 +21,6 @@ private:
 
 
 public:
-    State() {}
-
     State<T>(T state, double cost) : state(state), cost(cost), trailCost(cost), comeFrom(nullptr),Fheuristics(FLT_MAX) {}
 
     double getCost() const { return cost; }

@@ -36,6 +36,7 @@ public:
             this->numOfNodesEvaluated++;
             closed.push_back(current);
             if (current->Equals(searchable->getGoalState())) {
+                this->numOfNodesEvaluated++;
                 cout<<"num of nodes: " << this->numOfNodesEvaluated<<endl;
                 return searchable->getPath();
             }

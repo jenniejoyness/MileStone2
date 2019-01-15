@@ -5,7 +5,6 @@
 #include "MyClientHandler.h"
 #include "SplitClass.h"
 #include "Matrix.h"
-#pragma once
 
 MyClientHandler::MyClientHandler(Solver<Searchable<Point>*,string>* solver,CacheManager* cacheManager) {
     this->solver = solver;
@@ -36,13 +35,13 @@ void MyClientHandler::handleClient(int socketId) {
         }
         //solve matrix
         if (strcmp(buffer, "end") == 0) {
+
             Searchable<Point> *matrix = makeMatrix(tempProb);
             //get solution from disk
             if (this->cacheManager->hasSolution(prob)) {
                 solution = this->cacheManager->getSolution(prob);
-                cout<<"found in file"<<endl;
             } else {
-                cout<<"solved"<<endl;
+
                 solution = solver->solve(matrix);
 
                 //solution = to_string(matrix->getGoalState()->getTrailCost());
@@ -53,9 +52,7 @@ void MyClientHandler::handleClient(int socketId) {
             /* Write a response to the client */
             chr = const_cast<char *>(solution.c_str());
             n = write(socketId, chr, strlen(chr));
-            cout << "solution:" + solution << endl;
-            cout << "trail cost:" + to_string(matrix->getGoalState()->getTrailCost()) << endl;
-            delete(matrix);
+            delete matrix;
 
 
             if (n < 0) {

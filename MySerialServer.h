@@ -14,7 +14,8 @@
 
 #include <sys/socket.h>
 
-class MySerialServer : public Server {
+
+class MySerialServer : public server_side::Server {
 public:
     void open(int port, ClientHandler* c) override;
     void stop() override;

@@ -8,8 +8,8 @@
 class FileCacheManager : public CacheManager {
 public:
     FileCacheManager();
-    bool hasSolution(string prob);
-    string getSolution(string prob);
+    bool hasSolution(string prob) override;
+    string getSolution(string prob) override;
     void updateData(string prob, string solution) override;
     void saveToDisk(string prob, string solution) override;
     void loadDataMap();

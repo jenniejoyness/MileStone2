@@ -1,5 +1,6 @@
 #include <thread>
 #include "MySerialServer.h"
+
 void MySerialServer::open(int port, ClientHandler* c) {
     int sockfd, portno;
 
