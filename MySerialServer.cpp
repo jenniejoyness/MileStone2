@@ -1,5 +1,6 @@
 #include <thread>
 #include "MySerialServer.h"
+
 void MySerialServer::open(int port, ClientHandler* c) {
     int sockfd, portno;
 
@@ -30,7 +31,6 @@ void MySerialServer::open(int port, ClientHandler* c) {
     /* Now start listening for the clients, here process will
        * go in sleep mode and will wait for the incoming connection
     */
-
 
     thread t(serialService, sockfd,c);
     t.detach();

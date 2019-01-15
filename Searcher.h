@@ -19,5 +19,7 @@ public:
         return searchable->getGoalState()->getTrailCost();
     }
     virtual int getNumOfNodesEvaluated() { return numOfNodesEvaluated;}
+    virtual ~Searcher(){ delete searchable;}
+
 };
 #endif //MILESTONE2_SEARCHER_H

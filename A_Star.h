@@ -26,7 +26,7 @@ public:
         State<T> *current;
         vector<State<T> *> neighbors;
         priority_queue<State<T>*, vector<State<T>*>, Comp> open;
-        searchable->getInitialState()->setFheuristics(0);
+        //searchable->getInitialState()->setFheuristics(0);
         open.push(searchable->getInitialState());
         vector<State<T> *> closed;
 
@@ -36,6 +36,7 @@ public:
             this->numOfNodesEvaluated++;
             closed.push_back(current);
             if (current->Equals(searchable->getGoalState())) {
+                this->numOfNodesEvaluated++;
                 cout<<"num of nodes: " << this->numOfNodesEvaluated<<endl;
                 return searchable->getPath();
             }
