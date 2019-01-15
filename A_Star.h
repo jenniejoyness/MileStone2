@@ -26,6 +26,7 @@ public:
         State<T> *current;
         vector<State<T> *> neighbors;
         priority_queue<State<T>*, vector<State<T>*>, Comp> open;
+        searchable->getInitialState()->setFheuristics(0);
         open.push(searchable->getInitialState());
         vector<State<T> *> closed;
 
@@ -43,11 +44,15 @@ public:
                 //first time encountering state
                 if (!inOpen(open, neighbor) && !inClosed(closed, neighbor)) {
                     neighbor->setComeFrom(current);
-                    neighbor->setFheuristics(calculateF(neighbor,searchable->getGoalState()));
                     neighbor->addCost(current->getTrailCost());
+                    neighbor->setFheuristics(calculateF(neighbor,searchable->getGoalState()));
                     open.push(neighbor);
+                    continue;
                     //neighbor is either in open or closed and - can improve path
-                } else if (current->getTrailCost() + neighbor->getCost() < neighbor->getTrailCost()) {
+                } else if (inClosed(closed, neighbor)){
+                    continue;
+                }
+                else if (current->getTrailCost() + neighbor->getCost() < neighbor->getTrailCost()) {
                     neighbor->setTrailCost(current->getTrailCost() + neighbor->getCost());
                     neighbor->setFheuristics(calculateF(neighbor, searchable->getGoalState()));
                     neighbor->setComeFrom(current);

@@ -18,7 +18,7 @@ class BestFirstSearch : public Searcher<T> {
     class Comp {
     public:
         bool operator()(State<T>* left, State<T>* right) {
-            return (left->getCost()) > (right->getCost());
+            return (left->getTrailCost()) > (right->getTrailCost());
         }
     };
 
@@ -29,7 +29,6 @@ public:
         vector<State<T> *> neighbors;
         priority_queue<State<T>*, vector<State<T>*>, Comp> open;
         open.push(searchable->getInitialState());
-        vector<State<T> *> backup = {searchable->getInitialState()};
         vector<State<T> *> closed;
 
         while (!open.empty()) {
@@ -48,9 +47,12 @@ public:
                     neighbor->setComeFrom(current);
                     neighbor->addCost(current->getTrailCost());
                     open.push(neighbor);
-                    backup.push_back(neighbor);
+                    continue;
                     //neighbor is either in open or closed and - can improve path
-                } else if (current->getTrailCost() + neighbor->getCost() < neighbor->getTrailCost()) {
+                }else if (inClosed(closed, neighbor)){
+                    continue;
+                }
+                else if (current->getTrailCost() + neighbor->getCost() < neighbor->getTrailCost()) {
                     neighbor->setTrailCost(current->getTrailCost() + neighbor->getCost());
                     neighbor->setComeFrom(current);
                     open = updatePriorityQ(open);

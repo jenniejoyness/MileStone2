@@ -42,6 +42,7 @@ void MyParallelServer::open(int port, ClientHandler *c) {
     listen(sockfd, SOMAXCONN);
     clilen = sizeof(cli_addr);
     timeval timeout;
+    //todo - put back to 10
     timeout.tv_sec = 10;
     timeout.tv_usec = 0;
 
