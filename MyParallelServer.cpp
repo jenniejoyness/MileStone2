@@ -53,7 +53,6 @@ void MyParallelServer::open(int port, ClientHandler *cH) {
         if (cliSock < 0) {
 
             if (errno == EAGAIN || errno == EWOULDBLOCK) {
-                cout << "timeout!" << endl;
                 stop();
                 break;
             }
