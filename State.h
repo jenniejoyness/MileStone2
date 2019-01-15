@@ -54,5 +54,4 @@ public:
     }
 };
 
-
 #endif //MILESTONE2_STATE_H

@@ -129,7 +129,3 @@ public:
 };
 
 #endif //MILESTONE2_BESTFIRSTSEARCH_H
-
-
-
-
