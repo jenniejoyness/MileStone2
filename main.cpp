@@ -12,25 +12,24 @@
 #include "BFS.h"
 #include "DFS.h"
 #include "A_Star.h"
-#include "MyParallelServer.h"
 
 using namespace std;
-
-
+void foo(int* blah, int size, int d);
 #include <queue>
-
 int main() {
+ typedef pair<int, int> Pair;
+ typedef pair<double, Pair> pPair;
+ vector<pPair> pairs;
+   std::cout << "Hello, World!" << std::endl;
+   /* MySerialServer* d = new MySerialServer();
+    Solver<Searchable<Point>*,string>* solver = new SearcherSolver(new A_Star<Point>());
+    CacheManager* cacheManager = new FileCacheManager();
+    ClientHandler* ds = new MyClientHandler(solver, cacheManager);
+    d->open(5400,ds);*/
 
-     std::cout << "Hello, World!" << std::endl;
-     Server* d = new MyParallelServer();
-     Solver<Searchable<Point>*,string>* solver = new SearcherSolver(new A_Star<Point>());
-     CacheManager* cacheManager = new FileCacheManager();
-     ClientHandler* ds = new MyClientHandler(solver, cacheManager);
-     d->open(5400,ds);
 
-
-   /* State<Point> *initial = new State<Point>(Point(0, 0), 2);
-    State<Point> *goal = new State<Point>(Point(2, 2), 1);
+    State<Point>* initial = new State<Point>(Point(0, 0), 2);
+    State<Point>* goal = new State<Point>(Point(2, 2), 1);
 
     vector<State<Point> *> searchable;
     searchable.push_back(initial);
@@ -43,14 +42,23 @@ int main() {
     searchable.push_back(new State<Point>(Point(2, 1), 3));
     searchable.push_back(goal);
 
+     pairs.emplace_back(pPair(2,Pair(0,0)));
+     pairs.emplace_back(pPair(3,Pair(0,1)));
+     pairs.emplace_back(pPair(100,Pair(0,2)));
+     pairs.emplace_back(pPair(100,Pair(1,0)));
+     pairs.emplace_back(pPair(1,Pair(1,1)));
+     pairs.emplace_back(pPair(2,Pair(1,2)));
+     pairs.emplace_back(pPair(2,Pair(2,0)));
+     pairs.emplace_back(pPair(3,Pair(2,1)));
+     pairs.emplace_back(pPair(1,Pair(2,2)));
 
-    Searchable<Point> *m = new Matrix(searchable, initial, goal);
+
+    Searchable<Point>* m = new Matrix(searchable, initial, goal);
     string s;
-    Searcher<Point> *b = new BFS<Point>;
-    string x = b->search(m);
-    cout << "solution:"<<x << endl;
-    cout << "trail cost:"<<m->getGoalState()->getTrailCost() << endl;*/
-
+    m->setStateLocations(pairs);
+    m->setRowAndCol(3,3);
+    m->setSrcsAndDest(Pair(m->getInitialState()->getState().getX(),m->getInitialState()->getState().getY()),
+                           Pair(m->getGoalState()->getState().getX(), m->getGoalState()->getState().getY()));
 /*    if (cacheManager->hasSolution(prob)) {
         s = cacheManager->getSolution(prob);
         cout<<"found in file"<<endl;
@@ -61,7 +69,9 @@ int main() {
         cacheManager->updateData(prob, s);
         cacheManager->saveToDisk(prob, s);
     }*/
-
+    A_Star<Point> * b = new A_Star<Point>;
+    string x = b->search(m);
+    cout << x << endl;
 /*
  State<Point>* initial = new State<Point>(Point(0, 0), 3);
  State<Point>* goal = new State<Point>(Point(2, 2), 6);
@@ -84,7 +94,7 @@ int main() {
  string x = b->search(m);
  cout << x << endl;*/
 
-    while (true) {}
+    while(true){}
 
 
     return 0;

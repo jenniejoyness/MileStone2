@@ -31,6 +31,7 @@ void MySerialServer::open(int port, ClientHandler* c) {
        * go in sleep mode and will wait for the incoming connection
     */
 
+
     thread t(serialService, sockfd,c);
     t.detach();
 }
