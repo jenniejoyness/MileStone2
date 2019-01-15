@@ -42,7 +42,7 @@ void MyParallelServer::open(int port, ClientHandler *cH) {
     clilen = sizeof(cli_addr);
 
     timeval timeout;
-    timeout.tv_sec = 60;
+    timeout.tv_sec = 1;
     timeout.tv_usec = 0;
 
     while (true) {
