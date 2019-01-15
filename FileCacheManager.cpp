@@ -4,19 +4,24 @@
 #include "SplitClass.h"
 
 FileCacheManager::FileCacheManager() {
+    pthread_mutex_init(&mutex, nullptr);
     loadDataMap();
 }
 
 string FileCacheManager::getSolution(string problem) {
-    return data.find(problem)->second;
+    pthread_mutex_lock(&mutex);
+    string sol = data.find(problem)->second;
+    pthread_mutex_unlock(&mutex);
+    return sol;
 }
 
 bool FileCacheManager::hasSolution(string prob) {
-    for (auto problem : data) {
-        if (problem.first == prob) {
-            return true;
-        }
+    pthread_mutex_lock(&mutex);
+    if (data.find(prob)->first == prob){
+        pthread_mutex_unlock(&mutex);
+        return true;
     }
+    pthread_mutex_unlock(&mutex);
     return false;
 }
 
@@ -44,7 +49,9 @@ void FileCacheManager::loadDataMap() {
             }
             getline(fileSolutions, buffer);
         }
+        pthread_mutex_lock(&mutex);
         data.insert(pair<string, string>(p, s));
+        pthread_mutex_unlock(&mutex);
         inSol = false;
         p = "";
         s = "";
@@ -56,14 +63,13 @@ void FileCacheManager::loadDataMap() {
 
 
 void FileCacheManager::updateData(string prob, string solution) {
-
+    pthread_mutex_lock(&mutex);
     data.insert(pair<string, string>(prob, solution));
+    pthread_mutex_unlock(&mutex);
 }
 
 void FileCacheManager::saveToDisk(string prob, string solution) {
     ofstream fileSolution;
-
-
     fileSolution.open("solutions.txt" , ofstream::out | ostream::app);
     if(!fileSolution){
         throw "failed opening file";

@@ -5,7 +5,7 @@
 #include "CacheManager.h"
 #include <vector>
 
-class FileCacheManager : public CacheManager{
+class FileCacheManager : public CacheManager {
 public:
     FileCacheManager();
     bool hasSolution(string prob);
