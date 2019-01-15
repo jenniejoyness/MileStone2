@@ -23,14 +23,17 @@ using namespace std;
 
 int main() {
 
-    /*    std::cout << "Hello, World!" << std::endl;
+        std::cout << "Hello, World!" << std::endl;
          Server* d = new MyParallelServer();
          Solver<Searchable<Point>*,string>* solver = new SearcherSolver(new A_Star<Point>());
          CacheManager* cacheManager = new FileCacheManager();
          ClientHandler* ds = new MyClientHandler(solver, cacheManager);
-         d->open(5400,ds);*/
+         d->open(5400,ds);
+         delete d;
+         delete(solver);
+         delete(ds);
 
-    int size = 5;
+/*    int size = 37;
     vector<State<Point> *> searchable;
     string buffer;
     ifstream fileSolutions;
@@ -67,6 +70,6 @@ int main() {
     Searcher<Point> *b = new A_Star<Point>;
     string x = b->search(matrix);
     cout << "solution:" << x << endl;
-    cout << "trail cost:" << matrix->getGoalState()->getTrailCost() << endl;
+    cout << "trail cost:" << matrix->getGoalState()->getTrailCost() << endl;*/
     return 0;
 }

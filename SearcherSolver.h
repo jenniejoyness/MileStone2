@@ -13,6 +13,7 @@ private:
 public:
     SearcherSolver(Searcher<Point>* searcher): searcher(searcher) {}
     string solve(Searchable<Point>* p) override;
+    ~SearcherSolver()override{ delete(searcher);}
 };
 
 

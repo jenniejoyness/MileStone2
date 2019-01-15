@@ -6,7 +6,7 @@ template <class P, class S>
 class Solver {
 public:
 virtual S solve(P prob) = 0;
-
+virtual ~Solver() = default;
 };
 
 #endif //MILESTONE2_SOLVER_H

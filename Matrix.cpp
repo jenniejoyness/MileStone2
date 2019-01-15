@@ -21,3 +21,9 @@ vector<State<Point>*> Matrix::getNeighbors(State<Point>* s){
     }
     return neighbors;
 }
+
+Matrix::~Matrix(){
+    for (auto state: structure){
+        delete state;
+    }
+}

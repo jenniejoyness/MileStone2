@@ -44,15 +44,18 @@ void MyClientHandler::handleClient(int socketId) {
             } else {
                 cout<<"solved"<<endl;
                 solution = solver->solve(matrix);
+
                 //solution = to_string(matrix->getGoalState()->getTrailCost());
                 cacheManager->updateData(prob, solution);
                 cacheManager->saveToDisk(prob, solution);
             }
+
             /* Write a response to the client */
             chr = const_cast<char *>(solution.c_str());
             n = write(socketId, chr, strlen(chr));
             cout << "solution:" + solution << endl;
             cout << "trail cost:" + to_string(matrix->getGoalState()->getTrailCost()) << endl;
+            delete(matrix);
 
 
             if (n < 0) {

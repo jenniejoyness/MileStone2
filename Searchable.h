@@ -52,7 +52,7 @@ public:
         reverse(path.begin(), path.end());
         return path;
     }
-
+virtual ~Searchable() = default;
 };
 
 #endif //MILESTONE2_SEARCHABLE_H

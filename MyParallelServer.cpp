@@ -43,7 +43,7 @@ void MyParallelServer::open(int port, ClientHandler *c) {
     clilen = sizeof(cli_addr);
     timeval timeout;
     //todo - put back to 10
-    timeout.tv_sec = 10;
+    timeout.tv_sec = 10000;
     timeout.tv_usec = 0;
 
     setsockopt(sockfd, SOL_SOCKET, SO_RCVTIMEO, (char *)&timeout, sizeof(timeout));
@@ -81,6 +81,7 @@ void MyParallelServer::open(int port, ClientHandler *c) {
    struct params *info = (struct params*)newParams;
    int sockfd = info->sockfd;
    info->clientHandler->handleClient(sockfd);
+   delete(info);
 }
 
 /*
