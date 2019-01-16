@@ -52,18 +52,14 @@ void MyParallelServer::start(int server_sock, ClientHandler *ch) {
     stack<pthread_t> threads_stack;
     sockaddr_in address{};
     int addrlen = sizeof(address);
-
     timeval timeout;
-    timeout.tv_sec = 100;
-    timeout.tv_usec = 0;
-    setsockopt(server_sock, SOL_SOCKET, SO_RCVTIMEO, (char *) &timeout, sizeof(timeout));
-
     int new_socket;
     while (true) {
-        timeout.tv_sec = 100;
+        new_socket = accept(server_sock, (struct sockaddr *) &address, (socklen_t *) &addrlen);
+        timeout.tv_sec = 10;
         timeout.tv_usec = 0;
         setsockopt(server_sock, SOL_SOCKET, SO_RCVTIMEO, (char *) &timeout, sizeof(timeout));
-        if ((new_socket = accept(server_sock, (struct sockaddr *) &address, (socklen_t *) &addrlen)) < 0) {
+        if (new_socket < 0) {
             if (errno == EWOULDBLOCK || errno == EAGAIN) {
                 cout << "timeout" << endl;
                 stop();
