@@ -8,86 +8,88 @@
 #include <iostream>
 #include <unistd.h>
 #include <bits/sigthread.h>
+
 #include "MyParallelServer.h"
 #include <stack>
 
-void MyParallelServer::open(int port, ClientHandler *cH) {
-    int portno;
-    int clilen, cliSock;
-    struct sockaddr_in cli_addr;
-    struct sockaddr_in serv_addr;
+struct thread_data {
+    int sock;
+    ClientHandler *ch;
+};
 
-    /* First call to socket() function */
-    int sockfd = socket(AF_INET, SOCK_STREAM, 0);
+void MyParallelServer::open(int port, ClientHandler *clientHandler) {
+    info->sockfd = port;
+    info->clientHandler = clientHandler;
+    int server_fd;
+    struct sockaddr_in address{};
+    server_fd = socket(AF_INET, SOCK_STREAM, 0);
+    address.sin_family = AF_INET;
+    address.sin_addr.s_addr = INADDR_ANY;
+    address.sin_port = htons(port);
 
-    if (sockfd < 0) {
-        perror("ERROR opening socket");
+    int n = 1;
+    setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR, &n, sizeof(int));
+    if (bind(server_fd, (struct sockaddr *) &address, sizeof(address)) == -1) {
+        perror("socket bind");
         exit(1);
     }
-    info->clientHandler = cH;
-    /* Initialize socket structure */
-    bzero((char *) &serv_addr, sizeof(serv_addr));
-    portno = port;
 
-    serv_addr.sin_family = AF_INET;
-    serv_addr.sin_addr.s_addr = INADDR_ANY;
-    serv_addr.sin_port = htons(portno);
-
-    /* Now bind the host address using bind() call.*/
-    if (bind(sockfd, (struct sockaddr *) &serv_addr, sizeof(serv_addr)) < 0) {
-        perror("ERROR on binding");
+    if (listen(server_fd, 5) == -1) {
+        perror("socket listen");
         exit(1);
     }
-    listen(sockfd, SOMAXCONN);
-    clilen = sizeof(cli_addr);
+
+    start(server_fd, clientHandler);
+}
+
+void *start_thread_client(void *params) {
+    auto data = (thread_data *) params;
+    data->ch->handleClient(data->sock);
+    delete data;
+}
+
+void MyParallelServer::start(int server_sock, ClientHandler *ch) {
+    stack<pthread_t> threads_stack;
+    sockaddr_in address{};
+    int addrlen = sizeof(address);
 
     timeval timeout;
-    timeout.tv_sec = 1;
+    timeout.tv_sec = 100;
     timeout.tv_usec = 0;
+    setsockopt(server_sock, SOL_SOCKET, SO_RCVTIMEO, (char *) &timeout, sizeof(timeout));
 
+    int new_socket;
     while (true) {
-
-        cliSock = accept(sockfd, (struct sockaddr *) &cli_addr,
-                         (socklen_t *) &clilen);
-        info->sockfd = cliSock;
-        if (cliSock < 0) {
-
-            if (errno == EAGAIN || errno == EWOULDBLOCK) {
+        timeout.tv_sec = 100;
+        timeout.tv_usec = 0;
+        setsockopt(server_sock, SOL_SOCKET, SO_RCVTIMEO, (char *) &timeout, sizeof(timeout));
+        if ((new_socket = accept(server_sock, (struct sockaddr *) &address, (socklen_t *) &addrlen)) < 0) {
+            if (errno == EWOULDBLOCK || errno == EAGAIN) {
+                cout << "timeout" << endl;
                 stop();
                 break;
             }
-            perror("ERROR on accept");
+            perror("accept");
+            exit(EXIT_FAILURE);
+        }
+        setsockopt(new_socket, SOL_SOCKET, SO_RCVTIMEO, (char *) &timeout, sizeof(timeout));
+        auto data = new thread_data;
+        data->ch = ch;
+        data->sock = new_socket;
+        pthread_t trid;
+        if (pthread_create(&trid, nullptr, start_thread_client, data) < 0) {
+            perror("error on creating thread");
             exit(1);
         }
-
-        if (setsockopt(sockfd, SOL_SOCKET, SO_RCVTIMEO, (char *) &timeout,
-                       sizeof(timeout)) == -1) {
-            perror("ERROR on setting timeout");
-        }
-
-        pthread_t pthread;
-        if (pthread_create(&pthread, nullptr,
-                           MyParallelServer::parallelService,
-                           info) != 0) {
-            perror("thread failed");
-        }
-        this->threads.push_back(pthread);
+        threads_stack.push(trid);
     }
 }
-
-
-void *MyParallelServer::parallelService(void *newParams) {
-    struct params *info = (struct params *) newParams;
-    int sockfd = info->sockfd;
-    info->clientHandler->handleClient(sockfd);
-}
-
 /*
  * making all the clients wait till all are done
  */
 void MyParallelServer::stop() {
-    for (auto thread: this->threads) {
-        pthread_join(thread, nullptr);
+    while (!threads.empty()) {
+        pthread_join(threads.top(), nullptr);
+        threads.pop();
     }
 }
-

@@ -17,12 +17,10 @@ string FileCacheManager::getSolution(string problem) {
 }
 
 bool FileCacheManager::hasSolution(string prob) {
-    cout<<"in has solution"<<endl;
-    //pthread_mutex_lock(&mutex);
+    pthread_mutex_lock(&mutex);
     for (auto pair: data) {
         if(pair.first == prob){
-            cout<<"found"<<endl;
-           // pthread_mutex_unlock(&mutex);
+            pthread_mutex_unlock(&mutex);
             return true;
         }
     }
@@ -36,7 +34,6 @@ void FileCacheManager::loadDataMap() {
     string s;
     bool inSol = false;
     ifstream fileSolutions;
-
     fileSolutions.open("solutions.txt", ifstream::in | istream::app);
     if (!fileSolutions) {
         throw "Failed opening file";
