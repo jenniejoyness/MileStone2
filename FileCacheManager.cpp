@@ -1,5 +1,6 @@
 #include <fstream>
 #include <cstring>
+#include <iostream>
 #include "FileCacheManager.h"
 #include "SplitClass.h"
 
@@ -16,10 +17,14 @@ string FileCacheManager::getSolution(string problem) {
 }
 
 bool FileCacheManager::hasSolution(string prob) {
-    pthread_mutex_lock(&mutex);
-    if (data.find(prob)->first == prob){
-        pthread_mutex_unlock(&mutex);
-        return true;
+    cout<<"in has solution"<<endl;
+    //pthread_mutex_lock(&mutex);
+    for (auto pair: data) {
+        if(pair.first == prob){
+            cout<<"found"<<endl;
+           // pthread_mutex_unlock(&mutex);
+            return true;
+        }
     }
     pthread_mutex_unlock(&mutex);
     return false;
